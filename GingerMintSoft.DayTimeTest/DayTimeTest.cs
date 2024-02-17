@@ -7,6 +7,8 @@ namespace GingerMintSoft.DayTimeTest
     {
         // test for day 16.02.2024
         public DateTime CurrentDay { get; } = new DateTime(2024, 2, 16);
+        public double Latitude { get; set; } = 48.10507778308992;
+        public double Longitude { get; set; } = 7.90856839921184;
 
         [TestMethod]
         public void TestSunriseSunSetTime()
@@ -16,8 +18,8 @@ namespace GingerMintSoft.DayTimeTest
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
-                48.10507778308992, 
-                7.90856839921184, 
+                Latitude, 
+                Longitude, 
                 out var sunRise, 
                 out var sunSet);
             
@@ -42,8 +44,8 @@ namespace GingerMintSoft.DayTimeTest
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
-                48.10507778308992, 
-                7.90856839921184, 
+                Latitude, 
+                Longitude, 
                 out var sunRise, 
                 out var sunSet);
 
@@ -68,8 +70,8 @@ namespace GingerMintSoft.DayTimeTest
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
-                48.10507778308992, 
-                7.90856839921184, 
+                Latitude, 
+                Longitude, 
                 out var sunRise, 
                 out var sunSet);
 
@@ -94,8 +96,8 @@ namespace GingerMintSoft.DayTimeTest
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
-                48.10507778308992, 
-                7.90856839921184, 
+                Latitude, 
+                Longitude, 
                 out var sunRise, 
                 out var sunSet);
 
