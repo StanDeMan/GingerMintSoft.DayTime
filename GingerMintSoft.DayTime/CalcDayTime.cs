@@ -7,20 +7,84 @@
 	    private const double NauticalTwilightAltitude = -12d;
 	    private const double AstronomicalTwilightAltitude = -18d;
 
-	    // <summary>
-	    // Compute sunrise/sunset times UTC
-	    // </summary>
-	    // <param name="year">The year</param>
-	    // <param name="month">The month of year</param>
-	    // <param name="day">The day of month</param>
-	    // <param name="lat">The latitude</param>
-	    // <param name="lng">The longitude</param>
-	    // <param name="sunrise">The computed sunrise time (in seconds)</param>
-	    // <param name="sunset">The computed sunset time (in seconds)</param>
-	    public static void SunriseSunset(int year, int month, int day, double lat, double lng, out double sunrise, out double sunset)
+		private TimeZoneInfo? _timeZone;
+        private string? _zone = "W. Europe Standard Time";
+
+		public string? TimeZoneId
+		{
+			get => _zone;
+            set
+            {
+                _zone = value;
+                _timeZone = TimeZoneInfo.FindSystemTimeZoneById(_zone!);
+            }
+		}
+
+        public CalcDayTime()
+        {
+            _timeZone = TimeZoneInfo.FindSystemTimeZoneById(_zone!);
+        }
+
+		// <summary>
+		// Compute sunrise/sunset times UTC
+		// </summary>
+		// <param name="year">The year</param>
+		// <param name="month">The month of year</param>
+		// <param name="day">The day of month</param>
+		// <param name="lat">The latitude</param>
+		// <param name="lng">The longitude</param>
+		// <param name="sunrise">The computed sunrise time (in seconds)</param>
+		// <param name="sunset">The computed sunset time (in seconds)</param>
+		public void SunriseSunset(
+            int year, 
+            int month, 
+            int day, 
+            double lat, 
+            double lng, 
+            out double sunrise, 
+            out double sunset)
 	    {
 		    SunriseSunset(year, month, day, lng, lat, SunriseSunsetAltitude, true, out sunrise, out sunset);
 	    }
+
+        // <summary>
+        // Compute sunrise/sunset times UTC
+        // </summary>
+        // <param name="year">The year</param>
+        // <param name="month">The month of year</param>
+        // <param name="day">The day of month</param>
+        // <param name="lat">The latitude</param>
+        // <param name="lng">The longitude</param>
+        // <param name="sunrise">The computed sunrise time (in seconds)</param>
+        // <param name="sunset">The computed sunset time (in seconds)</param>
+        public Day SunriseSunset(DateTime date, Coordinates coordinates, bool convertToLocalTime = true)
+        {
+            SunriseSunset(
+                date.Year, 
+                date.Month, 
+                date.Day, 
+                coordinates.Longitude, 
+                coordinates.Latitude, 
+                SunriseSunsetAltitude, 
+                true, 
+                out var sunRise, 
+                out var sunSet);
+
+            var sunRiseTime = TimeSpan.FromHours(sunRise);
+            var sunSetTime = TimeSpan.FromHours(sunSet);
+
+            return convertToLocalTime
+                ? new Day
+                {
+                    SunRise = TimeZoneInfo.ConvertTimeFromUtc(date + sunRiseTime, _timeZone!),
+                    SunSet = TimeZoneInfo.ConvertTimeFromUtc(date + sunSetTime, _timeZone!)
+                }
+                : new Day
+                {
+                    SunRise = date + sunRiseTime,
+                    SunSet = date + sunSetTime
+                };
+        }
 
 	    // <summary>
 	    // Compute civil twilight times UTC
@@ -32,7 +96,14 @@
 	    // <param name="lng">The longitude</param>
 	    // <param name="sunrise">The computed civil twilight time at sunrise (in seconds)</param>
 	    // <param name="sunset">The computed civil twilight time at sunset (in seconds)</param>
-	    public static void CivilTwilight(int year, int month, int day, double lat, double lng, out double sunrise, out double sunset)
+	    public void CivilTwilight(
+            int year, 
+            int month,
+            int day, 
+            double lat, 
+            double lng, 
+            out double sunrise, 
+            out double sunset)
 	    {
 		    SunriseSunset(year, month, day, lng, lat, CivilTwilightAltitude, false, out sunrise, out sunset);
 	    }
@@ -47,7 +118,14 @@
 	    // <param name="lng">The longitude</param>
 	    // <param name="sunrise">The computed nautical twilight time at sunrise (in seconds)</param>
 	    // <param name="sunset">The computed nautical twilight time at sunset (in seconds)</param>
-	    public static void NauticalTwilight(int year, int month, int day, double lat, double lng, out double sunrise, out double sunset)
+	    public void NauticalTwilight(
+            int year, 
+            int month, 
+            int day, 
+            double lat, 
+            double lng, 
+            out double sunrise, 
+            out double sunset)
 	    {
 		    SunriseSunset(year, month, day, lng, lat, NauticalTwilightAltitude, false, out sunrise, out sunset);
 	    }
@@ -62,7 +140,14 @@
 	    // <param name="lng">The longitude</param>
 	    // <param name="sunrise">The computed astronomical twilight time at sunrise (in seconds)</param>
 	    // <param name="sunset">The computed astronomical twilight time at sunset (in seconds)</param>
-	    public static void AstronomicalTwilight(int year, int month, int day, double lat, double lng, out double sunrise, out double sunset)
+	    public void AstronomicalTwilight(
+            int year, 
+            int month, 
+            int day, 
+            double lat, 
+            double lng, 
+            out double sunrise, 
+            out double sunset)
 	    {
 		    SunriseSunset(year, month, day, lng, lat, AstronomicalTwilightAltitude, false, out sunrise, out sunset);
 	    }
@@ -429,5 +514,19 @@
 		    
             return sidtim0;
 	    }
+    }
+	/// <summary>
+	/// DayTime Details
+	/// </summary>
+    public class Day
+    { 
+        public DateTime SunRise { get; set; }
+		public DateTime SunSet { get; set; }
+    }
+
+    public class Coordinates
+    {
+		public double Latitude { get; set; }
+		public double Longitude { get; set; }
     }
 }
