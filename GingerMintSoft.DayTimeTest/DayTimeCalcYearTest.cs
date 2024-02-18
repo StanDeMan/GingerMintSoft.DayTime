@@ -29,6 +29,8 @@ namespace GingerMintSoft.DayTimeTest
 
                 actDate = actDate.AddDays(1);
             }
+
+            Assert.IsTrue(new DateTime(DateTime.Now.Year + 1, 1, 1) == actDate);
         }
     }
 }
