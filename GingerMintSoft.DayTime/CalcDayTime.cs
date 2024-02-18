@@ -53,16 +53,14 @@
 		    SunriseSunset(year, month, day, lng, lat, SunriseSunsetAltitude, true, out sunrise, out sunset);
 	    }
 
-        // <summary>
-        // Compute sunrise/sunset times UTC
-        // </summary>
-        // <param name="year">The year</param>
-        // <param name="month">The month of year</param>
-        // <param name="day">The day of month</param>
-        // <param name="lat">The latitude</param>
-        // <param name="lng">The longitude</param>
-        // <param name="sunrise">The computed sunrise time (in seconds)</param>
-        // <param name="sunset">The computed sunset time (in seconds)</param>
+        /// <summary>
+		/// Compute sunrise/sunset times UTC
+		/// If convertToLocalTimes is true the times are computed by the set time zone
+		/// </summary>
+		/// <param name="date">Given date to calculate sun rise and sun set</param>
+		/// <param name="coordinates">Lat and Lng</param>
+		/// <param name="convertToLocalTime">UTC or time by time zone</param>
+		/// <returns>Sun rise and sun set for this day</returns>
         public Day SunriseSunset(DateTime date, Coordinates coordinates, bool convertToLocalTime = true)
         {
             SunriseSunset(
@@ -82,18 +80,28 @@
             return ConvertByTimeZone(date, convertToLocalTime, sunRiseTime, sunSetTime);
         }
 
+		/// <summary>
+		/// Convert time if convertToLocalTime flag is set by given time zone
+		/// </summary>
+		/// <param name="date">Actual date without time</param>
+		/// <param name="convertToLocalTime">Convert to local time - otherwise UTC</param>
+		/// <param name="sunRiseTime">Calculated sun rise time</param>
+		/// <param name="sunSetTime">Calculated sin set time</param>
+		/// <returns>Sun rise and sun set date and time</returns>
         private Day ConvertByTimeZone(DateTime date, bool convertToLocalTime, TimeSpan sunRiseTime, TimeSpan sunSetTime)
         {
             return convertToLocalTime
                 ? new Day
                 {
                     SunRise = TimeZoneInfo.ConvertTimeFromUtc(date + sunRiseTime, _timeZone!),
-                    SunSet = TimeZoneInfo.ConvertTimeFromUtc(date + sunSetTime, _timeZone!)
+                    SunSet = TimeZoneInfo.ConvertTimeFromUtc(date + sunSetTime, _timeZone!),
+					DayLength = sunSetTime.Subtract(sunRiseTime)
                 }
                 : new Day
                 {
                     SunRise = date + sunRiseTime,
-                    SunSet = date + sunSetTime
+                    SunSet = date + sunSetTime,
+                    DayLength = sunSetTime.Subtract(sunRiseTime)
                 };
         }
 
@@ -531,6 +539,7 @@
 	/// </summary>
     public class Day
     { 
+		public TimeSpan DayLength { get; set; }
         public DateTime SunRise { get; set; }
 		public DateTime SunSet { get; set; }
     }
