@@ -14,7 +14,7 @@ namespace GingerMintSoft.DayTimeTest
         public void TestSunriseSunSetTime()
         {
             // Parameters : year - month - day - lat - long
-            CalcDayTime.SunriseSunset(
+            new CalcDayTime().SunriseSunset(
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
@@ -40,7 +40,7 @@ namespace GingerMintSoft.DayTimeTest
         [TestMethod]
         public void TestSunriseSunSetCivilTwilightTime()
         {
-            CalcDayTime.CivilTwilight(
+            new CalcDayTime().CivilTwilight(
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
@@ -66,7 +66,7 @@ namespace GingerMintSoft.DayTimeTest
         [TestMethod]
         public void TestSunriseSunSetNauticalTwilightTime()
         {
-            CalcDayTime.NauticalTwilight(
+            new CalcDayTime().NauticalTwilight(
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
@@ -92,7 +92,7 @@ namespace GingerMintSoft.DayTimeTest
         [TestMethod]
         public void TestSunriseSunSetAstronomicalTwilightTime()
         {
-            CalcDayTime.AstronomicalTwilight(
+            new CalcDayTime().AstronomicalTwilight(
                 CurrentDay.Year, 
                 CurrentDay.Month, 
                 CurrentDay.Day, 
