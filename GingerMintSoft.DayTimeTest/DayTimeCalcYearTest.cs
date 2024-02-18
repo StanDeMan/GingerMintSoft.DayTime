@@ -25,7 +25,8 @@ namespace GingerMintSoft.DayTimeTest
             
                 Console.WriteLine($"{actDate.Day:00}.{actDate.Month:00}.{actDate.Year} Sunrise: {actDay.SunRise}");
                 Console.WriteLine($"           Sunset:  {actDay.SunSet}");
-                Console.WriteLine("----------------------------");
+                Console.WriteLine($"        DayLength:  {actDay.DayLength.Hours:00}:{actDay.DayLength.Minutes:00}:{actDay.DayLength.Seconds:00}");
+                Console.WriteLine("---------------------------------------");
 
                 actDate = actDate.AddDays(1);
             }
