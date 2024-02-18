@@ -8,21 +8,27 @@
 	    private const double AstronomicalTwilightAltitude = -18d;
 
 		private TimeZoneInfo? _timeZone;
-        private string? _zone = "W. Europe Standard Time";
+        private string? _timeZoneId = "W. Europe Standard Time";
 
 		public string? TimeZoneId
 		{
-			get => _zone;
+			get => _timeZoneId;
             set
             {
-                _zone = value;
-                _timeZone = TimeZoneInfo.FindSystemTimeZoneById(_zone!);
+                _timeZoneId = value;
+                _timeZone = TimeZoneInfo.FindSystemTimeZoneById(_timeZoneId!);
             }
 		}
 
         public CalcDayTime()
         {
-            _timeZone = TimeZoneInfo.FindSystemTimeZoneById(_zone!);
+            _timeZone = TimeZoneInfo.FindSystemTimeZoneById(_timeZoneId!);
+        }
+
+        public CalcDayTime(string timeZoneId)
+        {
+            _timeZoneId = timeZoneId;
+            _timeZone = TimeZoneInfo.FindSystemTimeZoneById(_timeZoneId);
         }
 
 		// <summary>
@@ -73,6 +79,11 @@
             var sunRiseTime = TimeSpan.FromHours(sunRise);
             var sunSetTime = TimeSpan.FromHours(sunSet);
 
+            return ConvertByTimeZone(date, convertToLocalTime, sunRiseTime, sunSetTime);
+        }
+
+        private Day ConvertByTimeZone(DateTime date, bool convertToLocalTime, TimeSpan sunRiseTime, TimeSpan sunSetTime)
+        {
             return convertToLocalTime
                 ? new Day
                 {
@@ -86,7 +97,7 @@
                 };
         }
 
-	    // <summary>
+        // <summary>
 	    // Compute civil twilight times UTC
 	    // </summary>
 	    // <param name="year">The year</param>
