@@ -1,3 +1,4 @@
+using DayTimeService.Execute;
 using GingerMintSoft.DayTime;
 using GingerMintSoft.DayTime.Scheduler;
 using Task = System.Threading.Tasks.Task;
@@ -21,7 +22,7 @@ namespace DayTimeService
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("GingerMintSoftware.DayTimeServiceWorker started at: {time}", DateTimeOffset.Now.ToLocalTime());
+                _logger.LogInformation("DayTimeServiceWorker started at: {time}", DateTimeOffset.Now.ToLocalTime());
             }
 
             var task = new RecurringTask(() =>
@@ -43,7 +44,8 @@ namespace DayTimeService
                         StartTime = day.SunRise,
                         TaskAction = () =>
                         {
-                            _logger.LogInformation("GingerMintSoftware.DayTimeServiceWorker executing Task SunRise: {time}", DateTimeOffset.Now.ToLocalTime());
+                            var bOk = Command.Execute("w 3 0");
+                            _logger.LogInformation("DayTimeServiceWorker executing Task SunRise: {time}. Executed: {bool}", DateTimeOffset.Now.ToLocalTime(), bOk);
 
                             //turn on
                             _scheduler.RemoveTask("SunRise");
@@ -56,7 +58,8 @@ namespace DayTimeService
                         StartTime = day.SunSet,
                         TaskAction = () =>
                         {
-                            _logger.LogInformation("GingerMintSoftware.DayTimeServiceWorker executing Task SunSet: {time}", DateTimeOffset.Now.ToLocalTime());
+                            var bOk = Command.Execute("w 3 1");
+                            _logger.LogInformation("DayTimeServiceWorker executing Task SunSet: {time}. Executed: {bool}", DateTimeOffset.Now.ToLocalTime(), bOk);
 
                             //turn off
                             _scheduler.RemoveTask("SunSet");
@@ -66,7 +69,7 @@ namespace DayTimeService
                 DateTime.Today.AddDays(1).AddSeconds(5),
                 //DateTime.Now.ToLocalTime().AddSeconds(5),
                 TimeSpan.FromDays(1),
-                "DayTimeService"
+                "DayTimeServiceWorker"
             );
 
             _scheduler.AddTask(task);
