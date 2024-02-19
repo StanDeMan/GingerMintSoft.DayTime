@@ -65,8 +65,8 @@ namespace DayTimeService
                         }
                     });
                 },
-                //DateTime.Today.AddDays(1).AddSeconds(5),
-                DateTime.Now.ToLocalTime().AddSeconds(5),
+                DateTime.Today.AddDays(1).AddSeconds(5),
+                //DateTime.Now.ToLocalTime().AddSeconds(5),
                 TimeSpan.FromDays(1),
                 "DayTimeService"
             );
