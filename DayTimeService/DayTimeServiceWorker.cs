@@ -9,7 +9,6 @@ namespace DayTimeService
     public class DayTimeServiceWorker : BackgroundService
     {
         private readonly DayTimeTaskScheduler _scheduler = new();
-
         private readonly ILogger<DayTimeServiceWorker> _logger;
 
         public DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger)

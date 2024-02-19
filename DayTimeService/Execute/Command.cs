@@ -30,18 +30,13 @@ namespace DayTimeService.Execute
         {
             try
             {
-                var cmd = Convert.ToString(parameter?.Command);
+                var cmd = Convert.ToString(parameter.Command);
 
                 Writer.Write(@$"{cmd}{Environment.NewLine}");
                 Writer.Flush();
             }
             catch (Exception e)
             {
-                var factory = LoggerFactory.Create(builder => {
-                    builder.AddConsole();
-                });
-
-                var logger = factory.CreateLogger<Command>();
                 _logger.LogError($"Command.Execute (RunInternal): {e}");
 
                 return false;
