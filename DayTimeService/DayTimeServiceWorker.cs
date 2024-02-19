@@ -1,4 +1,3 @@
-using DayTimeService.Day;
 using GingerMintSoft.DayTime;
 using GingerMintSoft.DayTime.Scheduler;
 using Task = System.Threading.Tasks.Task;
@@ -31,7 +30,7 @@ namespace DayTimeService
                     var now = DateTime.Now.ToLocalTime();
                     var actDate = new DateTime(now.Year, now.Month, now.Day);
 
-                    var day = new DayTime().ReadSunTimes(
+                    var day = new CalcDayTime().SunriseSunset(
                         actDate,
                         new Coordinate()
                         {
