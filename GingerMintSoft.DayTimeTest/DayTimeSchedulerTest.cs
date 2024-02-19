@@ -62,6 +62,7 @@ namespace GingerMintSoft.DayTimeTest
 
             scheduler.AddTask(new Task()
             {
+                TaskId = "StartThis",
                 StartTime = DateTime.Now.AddSeconds(1),
                 TaskAction = () =>
                 {
@@ -71,6 +72,41 @@ namespace GingerMintSoft.DayTimeTest
                     Assert.IsTrue(_triggerCnt == 1);
                 }
             });
+        }
+
+        [TestMethod]
+        public void TestSchedulerTwoSingleTaskShots()
+        {
+            var scheduler = new TaskScheduler();
+            scheduler.Start();
+
+            var firstTask = new Task()
+            {
+                TaskId = "StartFirst",
+                StartTime = DateTime.Now.AddSeconds(1),
+                TaskAction = () =>
+                {
+                    if (++_triggerCnt != 1) return;
+
+                    Assert.IsTrue(_triggerCnt == 1);
+                }
+            };
+
+            var secondTask = new Task()
+            {
+                TaskId = "StartSecond",
+                StartTime = DateTime.Now.AddSeconds(3),
+                TaskAction = () =>
+                {
+                    if (++_triggerCnt != 2) return;
+
+                    scheduler.Dispose();
+                    Assert.IsTrue(_triggerCnt == 2);
+                }
+            };
+
+            scheduler.AddTask(firstTask);
+            scheduler.AddTask(secondTask);
         }
     }
 }
