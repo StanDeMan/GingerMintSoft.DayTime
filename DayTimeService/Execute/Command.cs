@@ -1,13 +1,12 @@
 ﻿using System.Text;
 using DayTimeService.Hardware;
-using DayTimeService.Logging;
 
 namespace DayTimeService.Execute
 {
     public class Command
     {
-        private readonly ILogger _logger = new Logger<Command>(Logger.LoggerFactory);
         private static readonly StreamWriter Writer;
+        private static readonly ILogger Logger = new Logger<Command>(Logging.Logger.LoggerFactory);
 
         /// <summary>
         /// Constructor:
@@ -26,7 +25,7 @@ namespace DayTimeService.Execute
         /// </summary>
         /// <param name="parameter">Command property</param>
         /// <returns>True: if went ok</returns>
-        private bool Execute(dynamic parameter)
+        public static bool Execute(dynamic parameter)
         {
             try
             {
@@ -37,7 +36,7 @@ namespace DayTimeService.Execute
             }
             catch (Exception e)
             {
-                _logger.LogError($"Command.Execute (RunInternal): {e}");
+                Logger.LogError($"Command.Execute (RunInternal): {e}");
 
                 return false;
             }
