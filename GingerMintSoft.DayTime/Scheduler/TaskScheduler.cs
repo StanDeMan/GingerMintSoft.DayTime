@@ -30,9 +30,9 @@
         {
             WriteLog("Task Scheduler thread stopping");
             Started = false;            
-            _autoResetEvent.Set();
             WriteLog("AutoResetEvent set called");
-            _thread!.Join();
+            _autoResetEvent.Set();
+            //_thread!.Join();
             WriteLog("Task Scheduler thread stopped");
         }
 

@@ -2,7 +2,7 @@
 {
     public interface ITask
     {
-        string TaskId { get; set; }
+        string? TaskId { get; set; }
 
         /// <summary>
         /// Time when task is going to start running.
@@ -23,7 +23,6 @@
         /// <returns>Returns DateTime.MinValue if task doesn't repeat</returns>
         DateTime GetNextRunTime(DateTime lastExecutionTime);
     }
-
 
     public class TaskComparer : IComparer<ITask>
     {
