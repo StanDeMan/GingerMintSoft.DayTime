@@ -4,20 +4,18 @@ namespace DayTimeService.Day
 {
     public class DayTime
     {
-        public void ReadSunTimes()
+        // default home location
+        private readonly Coordinate _home = new Coordinate()
         {
-            var home = new Coordinates()
-            {
-                Latitude = 48.10507778308992,
-                Longitude = 7.90856839921184
-            };
+            Latitude = 48.10507778308992,
+            Longitude = 7.90856839921184
+        };
 
-            // iterate thru whole year 
-            var actDate = DateTime.Now;
+        public GingerMintSoft.DayTime.Day ReadSunTimes(DateTime actDate, Coordinate? coordinate = null)
+        {
+            coordinate ??= _home;
 
-            // Parameters : year - month - day - lat - long
-            // ReSharper disable once UnusedVariable
-            var actDay = new CalcDayTime().SunriseSunset(actDate, home);
+            return new CalcDayTime().SunriseSunset(actDate, coordinate);
         }
      }
 }

@@ -5,7 +5,7 @@ namespace DayTimeService
         public static void Main(string[] args)
         {
             var builder = Host.CreateApplicationBuilder(args);
-            builder.Services.AddHostedService<Worker>();
+            builder.Services.AddHostedService<DayTimeServiceWorker>();
 
             var host = builder.Build();
             host.Run();

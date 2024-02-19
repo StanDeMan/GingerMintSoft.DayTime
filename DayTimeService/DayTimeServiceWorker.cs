@@ -1,10 +1,10 @@
 namespace DayTimeService
 {
-    public class Worker : BackgroundService
+    public class DayTimeServiceWorker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger<DayTimeServiceWorker> _logger;
 
-        public Worker(ILogger<Worker> logger)
+        public DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger)
         {
             _logger = logger;
         }
@@ -17,6 +17,7 @@ namespace DayTimeService
                 {
                     _logger.LogInformation("GingerMintSoftware.DayTimeService Worker running at: {time}", DateTimeOffset.Now);
                 }
+
                 await Task.Delay(1000, stoppingToken);
             }
         }
