@@ -8,7 +8,7 @@ namespace GingerMintSoft.DayTimeTest
         [TestMethod]
         public void TestSunriseSunSetTimeForOneYear()
         {
-            var home = new Coordinates()
+            var home = new Coordinate()
             {
                 Latitude = 48.10507778308992,
                 Longitude = 7.90856839921184

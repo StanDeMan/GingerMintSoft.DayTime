@@ -61,7 +61,7 @@
 		/// <param name="coordinates">Lat and Lng</param>
 		/// <param name="convertToLocalTime">UTC or time by time zone</param>
 		/// <returns>Sun rise and sun set for this day</returns>
-        public Day SunriseSunset(DateTime date, Coordinates coordinates, bool convertToLocalTime = true)
+        public Day SunriseSunset(DateTime date, Coordinate coordinates, bool convertToLocalTime = true)
         {
             SunriseSunset(
                 date.Year, 
@@ -544,7 +544,7 @@
 		public DateTime SunSet { get; set; }
     }
 
-    public class Coordinates
+    public class Coordinate
     {
 		public double Latitude { get; set; }
 		public double Longitude { get; set; }
