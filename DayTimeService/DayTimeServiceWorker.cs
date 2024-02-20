@@ -22,9 +22,16 @@ namespace DayTimeService
             _scheduler.Start();
         }
 
+        /// <summary>
+        /// Long term service
+        /// </summary>
+        /// <param name="stoppingToken">Stopping long term service</param>
+        /// <returns>Exit code</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("DayTimeServiceWorker started at: {time}", DateTimeOffset.Now.ToLocalTime());
+            _logger.LogInformation(
+                "DayTimeServiceWorker started at: {time}", 
+                DateTimeOffset.Now.ToLocalTime());
 
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var program = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
@@ -32,7 +39,10 @@ namespace DayTimeService
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
             var recurrence = TimeSpan.FromDays(1);
 
-            _logger.LogInformation("DayTimeServiceWorker is executed at: {time} with recurrence {time}", startingTime, recurrence);
+            _logger.LogInformation(
+                "DayTimeServiceWorker is executed at: {time} with recurrence {time}", 
+                startingTime, 
+                recurrence);
 
             var task = new RecurringTask(() => 
                 {
