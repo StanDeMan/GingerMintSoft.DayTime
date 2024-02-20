@@ -49,10 +49,12 @@ namespace DayTimeService
 
                     foreach (var taskToExec in program.Program.Tasks)
                     {
+                        taskToExec.ExecutionDateTime = taskToExec.TaskId == "SunRise" ? day.SunRise : day.SunSet;
+
                         _scheduler.AddTask(new DayTimeTask()
                         {
                             TaskId = taskToExec.TaskId,
-                            StartTime = taskToExec.TaskId == "SunRise" ? day.SunRise : day.SunSet,
+                            StartTime = taskToExec.ExecutionDateTime,
                             TaskAction = () =>
                             {
                                 var bOk = Command.Execute(taskToExec.Command);
