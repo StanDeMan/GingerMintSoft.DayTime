@@ -8,11 +8,11 @@
     "Tasks": [
       {
         "TaskId": "SunRise",
-        "Command": "w 3 0"
+        "Command": "w 3 1"
       },
       {
         "TaskId": "SunSet",
-        "Command": "w 3 1"
+        "Command": "w 3 0"
       }
     ]
   }
