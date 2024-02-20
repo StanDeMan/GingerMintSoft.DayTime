@@ -23,13 +23,13 @@ namespace DayTimeService.Execute
         /// <summary>
         /// Internal execution
         /// </summary>
-        /// <param name="parameter">Command property</param>
+        /// <param name="command">Command to execute</param>
         /// <returns>True: if went ok</returns>
-        public static bool Execute(dynamic parameter)
+        public static bool Execute(dynamic command)
         {
             try
             {
-                var cmd = Convert.ToString(parameter.Command);
+                var cmd = Convert.ToString(command);
 
                 Writer.Write(@$"{cmd}{Environment.NewLine}");
                 Writer.Flush();
