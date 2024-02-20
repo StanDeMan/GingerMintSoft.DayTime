@@ -12,6 +12,7 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker : BackgroundService
     {
+        private bool _blink;
         private readonly DayTimeTaskScheduler _scheduler = new();
         private readonly ILogger<DayTimeServiceWorker> _logger;
 
@@ -31,7 +32,7 @@ namespace DayTimeService
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var program = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
 
-            var task = new RecurringTask(() =>
+            var task = new RecurringTask(() => 
                 {
                     var now = DateTime.Now.ToLocalTime();
                     var actDate = new DateTime(now.Year, now.Month, now.Day);
@@ -44,49 +45,39 @@ namespace DayTimeService
                             Longitude = program.Program.Coordinate.Longitude
                         });
 
-                    var execute = program.Program.Tasks[0];
-
-                    _scheduler.AddTask(new DayTimeTask()
+                    foreach (var taskToExec in program.Program.Tasks)
                     {
-                        TaskId = execute.TaskId,
-                        StartTime = execute.TaskId == "SunRise" ? day.SunRise : day.SunSet,
-                        TaskAction = () =>
+                        _scheduler.AddTask(new DayTimeTask()
                         {
-                            var bOk = Command.Execute(execute.Command);
-                            _logger.LogInformation("DayTimeServiceWorker executing Task SunRise: {time}. Executed: {bool}", DateTimeOffset.Now.ToLocalTime(), bOk);
+                            TaskId = taskToExec.TaskId,
+                            StartTime = taskToExec.TaskId == "SunRise" ? day.SunRise : day.SunSet,
+                            TaskAction = () =>
+                            {
+                                var bOk = Command.Execute(taskToExec.Command);
 
-                            //turn on
-                            _scheduler.RemoveTask("SunRise");
-                        }
-                    });
+                                _logger.LogInformation(
+                                    "DayTimeServiceWorker executing Task {string} with command: {string} at {time}. Executed: {bool}", 
+                                    taskToExec.Command,
+                                    taskToExec.TaskId, 
+                                    DateTimeOffset.Now.ToLocalTime(), 
+                                    bOk);
 
-                    execute = program.Program.Tasks[1];
-
-                    _scheduler.AddTask(new DayTimeTask()
-                    {
-                        TaskId = execute.TaskId,
-                        StartTime = execute.TaskId == "SunRise" ? day.SunRise : day.SunSet,
-                        TaskAction = () =>
-                        {
-                            var bOk = Command.Execute(execute.Command);
-                            _logger.LogInformation("DayTimeServiceWorker executing Task SunSet: {time}. Executed: {bool}", DateTimeOffset.Now.ToLocalTime(), bOk);
-
-                            //turn on
-                            _scheduler.RemoveTask("SunRise");
-                        }
-                    });
+                                _scheduler.RemoveTask($"{taskToExec.TaskId}");
+                            }
+                        });
+                    }
                 },
                 DateTime.Today.AddDays(1).AddSeconds(5),
-                //DateTime.Now.ToLocalTime().AddSeconds(5),
                 TimeSpan.FromDays(1),
-                "DayTimeServiceWorker"
-            );
+                "DayTimeServiceWorker");
 
             _scheduler.AddTask(task);
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 // do some blinking here
+                if(_blink)
+
                 await Task.Delay(1000, stoppingToken);
             }
         }
