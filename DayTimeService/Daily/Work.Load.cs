@@ -34,6 +34,7 @@ namespace DayTimeService.Daily
 
     public class Task
     {
+        public DateTime ExecutionDateTime { get; set; }
         public required string TaskId { get; set; }
         public required string Command { get; set; }
     }
