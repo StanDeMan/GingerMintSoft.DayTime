@@ -1,0 +1,19 @@
+{
+  "Program": {
+    "TaskId": "DayTimeServiceWorker",
+    "Coordinate": {
+      "Latitude": 48.10507778308992,
+      "Longitude": 7.90856839921184
+    },
+    "Tasks": [
+      {
+        "TaskId": "SunRise",
+        "Command": "w 3 0"
+      },
+      {
+        "TaskId": "SunSet",
+        "Command": "w 3 1"
+      }
+    ]
+  }
+}
