@@ -12,7 +12,7 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker : BackgroundService
     {
-        private bool _blink;
+        private bool _ledOn;
         private readonly DayTimeTaskScheduler _scheduler = new();
         private readonly ILogger<DayTimeServiceWorker> _logger;
 
@@ -24,13 +24,15 @@ namespace DayTimeService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("DayTimeServiceWorker started at: {time}", DateTimeOffset.Now.ToLocalTime());
-            }
+            _logger.LogInformation("DayTimeServiceWorker started at: {time}", DateTimeOffset.Now.ToLocalTime());
 
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var program = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
+
+            var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
+            var recurrence = TimeSpan.FromDays(1);
+
+            _logger.LogInformation("DayTimeServiceWorker is executed at: {time} with recurrence {time}", startingTime, recurrence);
 
             var task = new RecurringTask(() => 
                 {
@@ -67,8 +69,8 @@ namespace DayTimeService
                         });
                     }
                 },
-                DateTime.Today.AddDays(1).AddSeconds(5),
-                TimeSpan.FromDays(1),
+                startingTime,
+                recurrence,
                 "DayTimeServiceWorker");
 
             _scheduler.AddTask(task);
@@ -76,9 +78,10 @@ namespace DayTimeService
             while (!stoppingToken.IsCancellationRequested)
             {
                 // do some blinking here
-                if(_blink)
+                Command.Execute((_ledOn ? "w 4 1" : "w 4 0"));
+                _ledOn = !_ledOn;
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(250, stoppingToken);
             }
         }
     }
