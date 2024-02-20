@@ -1,6 +1,9 @@
+using System.Reflection;
+using DayTimeService.Daily;
 using DayTimeService.Execute;
 using GingerMintSoft.DayTime;
 using GingerMintSoft.DayTime.Scheduler;
+using Coordinate = GingerMintSoft.DayTime.Coordinate;
 using Task = System.Threading.Tasks.Task;
 using DayTimeTask = GingerMintSoft.DayTime.Scheduler.Task;
 using DayTimeTaskScheduler = GingerMintSoft.DayTime.Scheduler.TaskScheduler;
@@ -25,6 +28,9 @@ namespace DayTimeService
                 _logger.LogInformation("DayTimeServiceWorker started at: {time}", DateTimeOffset.Now.ToLocalTime());
             }
 
+            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var program = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
+
             var task = new RecurringTask(() =>
                 {
                     var now = DateTime.Now.ToLocalTime();
@@ -34,17 +40,19 @@ namespace DayTimeService
                         actDate,
                         new Coordinate()
                         {
-                            Latitude = 48.10507778308992,
-                            Longitude = 7.90856839921184
+                            Latitude = program!.Program.Coordinate.Latitude,
+                            Longitude = program.Program.Coordinate.Longitude
                         });
+
+                    var execute = program.Program.Tasks[0];
 
                     _scheduler.AddTask(new DayTimeTask()
                     {
-                        TaskId = "SunRise",
-                        StartTime = day.SunRise,
+                        TaskId = execute.TaskId,
+                        StartTime = execute.TaskId == "SunRise" ? day.SunRise : day.SunSet,
                         TaskAction = () =>
                         {
-                            var bOk = Command.Execute("w 3 0");
+                            var bOk = Command.Execute(execute.Command);
                             _logger.LogInformation("DayTimeServiceWorker executing Task SunRise: {time}. Executed: {bool}", DateTimeOffset.Now.ToLocalTime(), bOk);
 
                             //turn on
@@ -52,17 +60,19 @@ namespace DayTimeService
                         }
                     });
 
+                    execute = program.Program.Tasks[1];
+
                     _scheduler.AddTask(new DayTimeTask()
                     {
-                        TaskId = "SunSet",
-                        StartTime = day.SunSet,
+                        TaskId = execute.TaskId,
+                        StartTime = execute.TaskId == "SunRise" ? day.SunRise : day.SunSet,
                         TaskAction = () =>
                         {
-                            var bOk = Command.Execute("w 3 1");
+                            var bOk = Command.Execute(execute.Command);
                             _logger.LogInformation("DayTimeServiceWorker executing Task SunSet: {time}. Executed: {bool}", DateTimeOffset.Now.ToLocalTime(), bOk);
 
-                            //turn off
-                            _scheduler.RemoveTask("SunSet");
+                            //turn on
+                            _scheduler.RemoveTask("SunRise");
                         }
                     });
                 },
