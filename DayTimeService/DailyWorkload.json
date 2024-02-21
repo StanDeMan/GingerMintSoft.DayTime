@@ -1,5 +1,6 @@
 {
   "Program": {
+    "Recurrence" : "1:00:00:00",
     "TaskId": "DayTimeServiceWorker",
     "Coordinate": {
       "Latitude": 48.10507778308992,
@@ -7,10 +8,12 @@
     },
     "Tasks": [
       {
+        "Id": 1,
         "TaskId": "SunRise",
         "Command": "w 3 1"
       },
       {
+        "Id": 2,
         "TaskId": "SunSet",
         "Command": "w 3 0"
       }

@@ -22,6 +22,7 @@ namespace DayTimeService.Daily
     public class Program
     {
         public required string TaskId { get; set; }
+        public TimeSpan? Recurrence { get; set; }
         public required Coordinate Coordinate { get; set; }
         public required List<Task> Tasks { get; set; }
     }
@@ -34,6 +35,7 @@ namespace DayTimeService.Daily
 
     public class Task
     {
+        public required int Id { get; set; }
         public DateTime ExecutionDateTime { get; set; }
         public required string TaskId { get; set; }
         public required string Command { get; set; }

@@ -12,6 +12,7 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker : BackgroundService
     {
+        public enum Day { Undefined = 0, SunRise = 1, SunSet = 2 }
         private bool _ledOn;
         private readonly DayTimeTaskScheduler _scheduler = new();
         private readonly ILogger<DayTimeServiceWorker> _logger;
@@ -34,10 +35,11 @@ namespace DayTimeService
                 DateTimeOffset.Now.ToLocalTime());
 
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var program = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
+            var execute = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
 
+            // start importing program every 5 minutes past midnight
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
-            var recurrence = TimeSpan.FromDays(1);
+            var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
             _logger.LogInformation(
                 "DayTimeServiceWorker is executed at: {time} with recurrence {time}", 
@@ -53,13 +55,15 @@ namespace DayTimeService
                         actDate,
                         new Coordinate()
                         {
-                            Latitude = program!.Program.Coordinate.Latitude,
-                            Longitude = program.Program.Coordinate.Longitude
+                            Latitude = execute.Program.Coordinate.Latitude,
+                            Longitude = execute.Program.Coordinate.Longitude
                         });
 
-                    foreach (var taskToExec in program.Program.Tasks)
+                    foreach (var taskToExec in execute.Program.Tasks.OrderBy(idx => idx.Id))
                     {
-                        taskToExec.ExecutionDateTime = taskToExec.TaskId == "SunRise" ? day.SunRise : day.SunSet;
+                        taskToExec.ExecutionDateTime = taskToExec.Id == Convert.ToInt32(Day.SunRise) 
+                            ? day.SunRise 
+                            : day.SunSet;
 
                         _scheduler.AddTask(new DayTimeTask()
                         {
