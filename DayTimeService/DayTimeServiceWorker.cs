@@ -48,6 +48,7 @@ namespace DayTimeService
 
             var task = new RecurringTask(() => 
                 {
+                    //actual date and time set to midnight
                     var now = DateTime.Now.ToLocalTime();
                     var actDate = new DateTime(now.Year, now.Month, now.Day);
 
@@ -59,16 +60,14 @@ namespace DayTimeService
                             Longitude = execute.Program.Coordinate.Longitude
                         });
 
-                    foreach (var taskToExec in execute.Program.Tasks.OrderBy(idx => idx.Id))
+                    foreach (var taskToExec in execute.Program.Tasks.OrderBy(tsk => tsk.Id))
                     {
-                        taskToExec.ExecutionDateTime = taskToExec.Id == Convert.ToInt32(Day.SunRise) 
-                            ? day.SunRise 
-                            : day.SunSet;
-
                         _scheduler.AddTask(new DayTimeTask()
                         {
                             TaskId = taskToExec.TaskId,
-                            StartTime = taskToExec.ExecutionDateTime,
+                            StartTime = taskToExec.Id == Convert.ToInt32(Day.SunRise) 
+                                ? day.SunRise 
+                                : day.SunSet,
                             TaskAction = () =>
                             {
                                 var bOk = Command.Execute(taskToExec.Command);
