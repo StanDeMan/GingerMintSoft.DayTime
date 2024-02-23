@@ -37,6 +37,7 @@ namespace DayTimeService.Daily
     {
         public required int Id { get; set; }
         public required string TaskId { get; set; }
+        public required double Offset { get; set; }
         public required string Command { get; set; }
     }
 }

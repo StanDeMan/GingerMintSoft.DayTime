@@ -1,9 +1,7 @@
 using System.Reflection;
 using DayTimeService.Daily;
 using DayTimeService.Execute;
-using GingerMintSoft.DayTime;
 using GingerMintSoft.DayTime.Scheduler;
-using Coordinate = GingerMintSoft.DayTime.Coordinate;
 using Task = System.Threading.Tasks.Task;
 using DayTimeTask = GingerMintSoft.DayTime.Scheduler.Task;
 using DayTimeTaskScheduler = GingerMintSoft.DayTime.Scheduler.TaskScheduler;
@@ -12,7 +10,7 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker : BackgroundService
     {
-        public enum Day { Undefined = 0, SunRise = 1, SunSet = 2 }
+        public enum Day { SunRise = 0, SunSet = 1, Undefined = 9999 }
         private bool _ledOn;
         private readonly DayTimeTaskScheduler _scheduler = new();
         private readonly ILogger<DayTimeServiceWorker> _logger;
@@ -38,7 +36,8 @@ namespace DayTimeService
             var execute = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
 
             // start importing program every 5 minutes past midnight
-            var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
+            //var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
+            var startingTime = DateTime.Today.AddSeconds(1).AddSeconds(5);
             var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
             _logger.LogInformation(
@@ -52,13 +51,7 @@ namespace DayTimeService
                     var now = DateTime.Now.ToLocalTime();
                     var actDate = new DateTime(now.Year, now.Month, now.Day);
 
-                    var day = new CalcDayTime().SunriseSunset(
-                        actDate,
-                        new Coordinate()
-                        {
-                            Latitude = execute.Program.Coordinate.Latitude,
-                            Longitude = execute.Program.Coordinate.Longitude
-                        });
+                    var day = Define.CalcSunRiseSunSet(actDate, execute);
 
                     foreach (var taskToExec in execute.Program.Tasks.OrderBy(tsk => tsk.Id))
                     {
