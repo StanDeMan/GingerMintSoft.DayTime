@@ -35,9 +35,8 @@ namespace DayTimeService
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var execute = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
 
-            // start importing program every 5 minutes past midnight
-            //var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
-            var startingTime = DateTime.Today.AddSeconds(1).AddSeconds(5);
+            // start importing program every midnight after 5 minutes
+            var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
             var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
             _logger.LogInformation(
