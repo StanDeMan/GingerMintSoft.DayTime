@@ -10,11 +10,13 @@
       {
         "Id": 1,
         "TaskId": "SunRise",
+        "Offset": 45,
         "Command": "w 3 1"
       },
       {
         "Id": 2,
         "TaskId": "SunSet",
+        "Offset": -45,
         "Command": "w 3 0"
       }
     ]
