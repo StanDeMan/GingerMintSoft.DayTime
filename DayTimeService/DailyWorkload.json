@@ -11,13 +11,13 @@
         "Id": 1,
         "TaskId": "SunRise",
         "Offset": 30,
-        "Command": "w 3 1"
+        "Command": "w 23 0"
       },
       {
         "Id": 2,
         "TaskId": "SunSet",
         "Offset": -30,
-        "Command": "w 3 0"
+        "Command": "w 23 1"
       }
     ]
   }
