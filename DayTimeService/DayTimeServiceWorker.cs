@@ -1,6 +1,7 @@
 using System.Reflection;
 using DayTimeService.Daily;
 using DayTimeService.Execute;
+using DayTimeService.Hardware;
 using GingerMintSoft.DayTime.Scheduler;
 using Task = System.Threading.Tasks.Task;
 using DayTimeTask = GingerMintSoft.DayTime.Scheduler.Task;
@@ -33,7 +34,10 @@ namespace DayTimeService
                 DateTimeOffset.Now.ToLocalTime());
 
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var execute = new Application().ReadWorkload($@"{currentPath}\DailyWorkload.json");
+
+            var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows 
+                ? $@"{currentPath}\DailyWorkload.json" 
+                : $@"{currentPath}/DailyWorkload.json");
 
             // start importing program every midnight after 5 minutes
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
