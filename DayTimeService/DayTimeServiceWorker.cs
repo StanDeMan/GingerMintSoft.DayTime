@@ -34,7 +34,6 @@ namespace DayTimeService
                 DateTimeOffset.Now.ToLocalTime());
 
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
             var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows 
                 ? $@"{currentPath}\DailyWorkload.json" 
                 : $@"{currentPath}/DailyWorkload.json");
@@ -89,7 +88,7 @@ namespace DayTimeService
             while (!stoppingToken.IsCancellationRequested)
             {
                 // do some blinking here
-                Command.Execute((_ledOn ? "w 4 1" : "w 4 0"));
+                Command.Execute((_ledOn ? "w 14 1" : "w 14 0"));
                 _ledOn = !_ledOn;
 
                 await Task.Delay(250, stoppingToken);
