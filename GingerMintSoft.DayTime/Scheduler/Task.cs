@@ -10,7 +10,7 @@ public class Task : ITask
     /// <summary>
     /// TimeSpan.Zero mean null
     /// </summary>
-    public TimeSpan Recurrance { get; set; } = TimeSpan.Zero;
+    public TimeSpan Recurrence { get; set; } = TimeSpan.Zero;
 
     public void Run()
     {
@@ -19,7 +19,7 @@ public class Task : ITask
 
     public DateTime GetNextRunTime(DateTime lastExecutionTime)
     {
-        return Recurrance != TimeSpan.Zero
-            ? lastExecutionTime.Add(Recurrance)
+        return Recurrence != TimeSpan.Zero
+            ? lastExecutionTime.Add(Recurrence)
             : DateTime.MinValue;    }
 }

@@ -50,7 +50,7 @@ namespace GingerMintSoft.DayTimeTest
                     scheduler.Dispose();
                     Assert.IsTrue(_triggerCnt == 1);
                 },
-                Recurrance = TimeSpan.FromSeconds(1)
+                Recurrence = TimeSpan.FromSeconds(1)
             });
         }
 
