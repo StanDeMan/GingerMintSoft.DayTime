@@ -11,13 +11,13 @@
         /// <summary>
         /// TimeSpan.Zero mean null
         /// </summary>
-        public TimeSpan Recurrance { get; set; }
+        public TimeSpan Recurrence { get; set; }
 
         public RecurringTask(Action taskAction, DateTime startTime, TimeSpan recurrence, string? taskId = null!)
         {
             TaskAction = taskAction;
             StartTime = startTime;
-            Recurrance = recurrence;
+            Recurrence = recurrence;
             TaskId = taskId;
         }
 
@@ -28,8 +28,8 @@
 
         public DateTime GetNextRunTime(DateTime lastExecutionTime)
         {
-            return Recurrance != TimeSpan.Zero
-                ? lastExecutionTime.Add(Recurrance)
+            return Recurrence != TimeSpan.Zero
+                ? lastExecutionTime.Add(Recurrence)
                 : DateTime.MinValue;
         }
     }
