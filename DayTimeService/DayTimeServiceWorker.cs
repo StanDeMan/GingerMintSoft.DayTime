@@ -5,7 +5,6 @@ using DayTimeService.Hardware;
 using GingerMintSoft.DayTime.Scheduler;
 using Task = System.Threading.Tasks.Task;
 using DayTimeTask = GingerMintSoft.DayTime.Scheduler.Task;
-using DayTimeTaskScheduler = GingerMintSoft.DayTime.Scheduler.TaskScheduler;
 
 namespace DayTimeService
 {
@@ -13,13 +12,11 @@ namespace DayTimeService
     {
         public enum Day { SunRise = 0, SunSet = 1, Undefined = 9999 }
         private bool _ledOn;
-        private readonly DayTimeTaskScheduler _scheduler = new();
         private readonly ILogger<DayTimeServiceWorker> _logger;
 
         public DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger)
         {
             _logger = logger;
-            _scheduler.Start();
         }
 
         /// <summary>
@@ -47,7 +44,7 @@ namespace DayTimeService
                 startingTime, 
                 recurrence);
 
-            var task = new RecurringTask(() => 
+            var recurringTask = new RecurringTask(() =>
                 {
                     //actual date and time set to midnight
                     var now = DateTime.Now.ToLocalTime();
@@ -57,33 +54,29 @@ namespace DayTimeService
 
                     foreach (var taskToExec in execute.Program.Tasks.OrderBy(tsk => tsk.Id))
                     {
-                        _scheduler.AddTask(new DayTimeTask()
-                        {
-                            TaskId = taskToExec.TaskId,
-                            StartTime = taskToExec.Id == Convert.ToInt32(Day.SunRise) 
-                                ? day.SunRise 
-                                : day.SunSet,
-                            TaskAction = () =>
-                            {
-                                var bOk = Command.Execute(taskToExec.Command);
+                        //AddTask(new DayTimeTask()
+                        //{
+                        //    TaskId = taskToExec.TaskId,
+                        //    StartTime = taskToExec.Id == Convert.ToInt32(Day.SunRise)
+                        //        ? day.SunRise
+                        //        : day.SunSet,
+                        //    TaskAction = () =>
+                        //    {
+                        //        var bOk = Command.Execute(taskToExec.Command);
 
-                                _logger.LogInformation(
-                                    "DayTimeServiceWorker executing Task {string} with command: {string} at {time}. Executed: {bool}", 
-                                    taskToExec.Command,
-                                    taskToExec.TaskId, 
-                                    DateTimeOffset.Now.ToLocalTime(), 
-                                    bOk);
-
-                                _scheduler.RemoveTask($"{taskToExec.TaskId}");
-                            }
-                        });
+                        //        _logger.LogInformation(
+                        //            "DayTimeServiceWorker executing Task {string} with command: {string} at {time}. Executed: {bool}",
+                        //            taskToExec.Command,
+                        //            taskToExec.TaskId,
+                        //            DateTimeOffset.Now.ToLocalTime(),
+                        //            bOk);
+                        //    }
+                        //});
                     }
                 },
                 startingTime,
                 recurrence,
-                "DayTimeServiceWorker");
-
-            _scheduler.AddTask(task);
+                execute.Program.TaskId);
 
             while (!stoppingToken.IsCancellationRequested)
             {

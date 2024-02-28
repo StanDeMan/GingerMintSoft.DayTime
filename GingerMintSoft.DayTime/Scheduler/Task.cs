@@ -17,9 +17,10 @@ public class Task : ITask
         TaskAction!();
     }
 
-    public DateTime GetNextRunTime(DateTime lastExecutionTime)
+    public DateTime GetNextExecutionTime(DateTime lastExecutionTime)
     {
         return Recurrence != TimeSpan.Zero
             ? lastExecutionTime.Add(Recurrence)
-            : DateTime.MinValue;    }
+            : DateTime.MinValue;
+    }
 }

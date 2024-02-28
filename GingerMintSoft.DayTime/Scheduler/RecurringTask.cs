@@ -3,8 +3,8 @@
     public class RecurringTask : ITask
     {
         public string? TaskId { get; set; }
-
         public DateTime StartTime { get; set; }
+        public TaskCollection Tasks { get; set; } = new();
 
         public Action TaskAction { get; set; }
 
@@ -26,11 +26,20 @@
             TaskAction();
         }
 
-        public DateTime GetNextRunTime(DateTime lastExecutionTime)
+        public DateTime GetNextExecutionTime(DateTime lastExecutionTime)
         {
             return Recurrence != TimeSpan.Zero
                 ? lastExecutionTime.Add(Recurrence)
                 : DateTime.MinValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task">Once ITask object is added, it should never be updated from outside TaskScheduler</param>
+        public void AddTask(ITask? task)
+        {
+            Tasks.Add(task);
         }
     }
 }
