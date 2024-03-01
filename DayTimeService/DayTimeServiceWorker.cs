@@ -41,7 +41,7 @@ namespace DayTimeService
                 startingTime, 
                 recurrence.TotalHours);
 
-            await StartSunRiseSunSetScheduler(stoppingToken, execute, recurrence, startingTime);
+            await StartDayTimeScheduler(stoppingToken, execute, recurrence, startingTime);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -61,7 +61,7 @@ namespace DayTimeService
         /// <param name="recurrence">In which interval should the execution take place</param>
         /// <param name="startingTime">The first trigger time</param>
         /// <returns></returns>
-        private static async Task StartSunRiseSunSetScheduler(CancellationToken stoppingToken,
+        private static async Task StartDayTimeScheduler(CancellationToken stoppingToken,
             Workload execute,
             TimeSpan recurrence,
             DateTime startingTime)
