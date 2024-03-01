@@ -37,9 +37,9 @@ namespace DayTimeService
             var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
             _logger.LogInformation(
-                "DayTimeServiceWorker is executed at: {time} with recurrence {time}", 
+                "DayTimeServiceWorker is executed at: {time} with recurrence of {double} hours", 
                 startingTime, 
-                recurrence);
+                recurrence.TotalHours);
 
             await StartSunRiseSunSetScheduler(stoppingToken, execute, recurrence, startingTime);
 
