@@ -12,7 +12,7 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger) : BackgroundService
     {
-        public enum Day { Undefined = 9999, SunRise = 0, SunSet = 1,  }
+        public enum Day { Undefined = -1, SunRise = 0, SunSet = 1,  }
         private bool _ledOn;
         private readonly ILogger<DayTimeServiceWorker> _logger = logger;
 
