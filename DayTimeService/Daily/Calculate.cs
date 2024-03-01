@@ -2,9 +2,9 @@
 
 namespace DayTimeService.Daily
 {
-    public class Define
+    public class Calculate
     {
-        public static Day CalcSunRiseSunSet(DateTime actDate, Workload execute)
+        public static Day SunRiseSunSet(DateTime actDate, Workload execute)
         {
             var day = new CalcDayTime().SunriseSunset(
                 actDate,

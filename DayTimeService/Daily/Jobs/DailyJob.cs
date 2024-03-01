@@ -16,7 +16,7 @@ namespace DayTimeService.Daily.Jobs
             var now = DateTime.Now.ToLocalTime();
             var actDate = new DateTime(now.Year, now.Month, now.Day);
 
-            var day = Define.CalcSunRiseSunSet(actDate, execute!);
+            var day = Calculate.SunRiseSunSet(actDate, execute!);
             
             var scheduler = await new StdSchedulerFactory().GetScheduler();
             await scheduler.Start();
