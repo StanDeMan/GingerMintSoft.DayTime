@@ -4,10 +4,16 @@ namespace DayTimeService.Daily
 {
     public class Calculate
     {
-        public static Day SunRiseSunSet(DateTime actDate, Workload execute)
+        /// <summary>
+        /// Calculate sun rise and sun set times by geo coordinates
+        /// </summary>
+        /// <param name="date">Calculate for this specific date</param>
+        /// <param name="execute">Object with geo coordinates and a time offset</param>
+        /// <returns>Times of sun rise and sun set for this day</returns>
+        public static Day SunRiseSunSet(DateTime date, Workload execute)
         {
             var day = new CalcDayTime().SunriseSunset(
-                actDate,
+                date,
                 new GingerMintSoft.DayTime.Coordinate()
                 {
                     Latitude = execute.Program.Coordinate.Latitude,
@@ -23,8 +29,8 @@ namespace DayTimeService.Daily
         /// Take offsets to avoid twilight time regions
         /// </summary>
         /// <param name="day">For this day</param>
-        /// <param name="execute"></param>
-        /// <returns></returns>
+        /// <param name="execute">In this object is the offset included</param>
+        /// <returns>Times of sun rise and sun set for this day with offset</returns>
         private static Day AppendOffsetTimes(Day day, Workload execute)
         {
             day.SunRise = day.SunRise.Add(
