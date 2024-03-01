@@ -1,6 +1,6 @@
 ﻿namespace DayTimeService.Logging
 {
-    internal static class Logger
+    public static class Logger
     {
         public static ILoggerFactory LoggerFactory {get;}
 
