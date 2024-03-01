@@ -41,26 +41,7 @@ namespace DayTimeService
                 startingTime, 
                 recurrence);
 
-            var scheduler = await new StdSchedulerFactory().GetScheduler(stoppingToken);
-            await scheduler.Start(stoppingToken);
-
-            var job = JobBuilder.Create<DailyJob>()
-                .WithIdentity(execute.Program.TaskId)
-                .UsingJobData("Execute", JsonConvert.SerializeObject(execute))
-                .Build();
- 
-            var trigger = TriggerBuilder.Create()
-                .WithDailyTimeIntervalSchedule(s => 
-                    s.WithIntervalInHours(Convert.ToInt32(recurrence.TotalHours))
-                        .OnEveryDay()
-                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(
-                            startingTime.Hour,
-                            startingTime.Minute)
-                        //.StartingDailyAt(new TimeOfDay(DateTime.Now.Hour, DateTime.Now.Minute,DateTime.Now.Second)
-                        )
-                    ).Build();
-
-            await scheduler.ScheduleJob(job, trigger, stoppingToken);
+            await StartSunRiseSunSetScheduler(stoppingToken, execute, recurrence, startingTime);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -71,39 +52,40 @@ namespace DayTimeService
                 await Task.Delay(250, stoppingToken);
             }
         }
+
+        /// <summary>
+        /// Start all over scheduler for sun rise and sun set calculation and command execution
+        /// </summary>
+        /// <param name="stoppingToken">Thread stopping</param>
+        /// <param name="execute">All parameters for execution</param>
+        /// <param name="recurrence">In which interval should the execution take place</param>
+        /// <param name="startingTime">The first trigger time</param>
+        /// <returns></returns>
+        private static async Task StartSunRiseSunSetScheduler(CancellationToken stoppingToken,
+            Workload execute,
+            TimeSpan recurrence,
+            DateTime startingTime)
+        {
+            var scheduler = await new StdSchedulerFactory().GetScheduler(stoppingToken);
+            await scheduler.Start(stoppingToken);
+
+            var job = JobBuilder.Create<DailyJob>()
+                .WithIdentity(execute.Program.TaskId)
+                .UsingJobData("Execute", JsonConvert.SerializeObject(execute))
+                .Build();
+
+            var trigger = TriggerBuilder.Create()
+                .WithDailyTimeIntervalSchedule(s =>
+                    s.WithIntervalInHours(Convert.ToInt32(recurrence.TotalHours))
+                        .OnEveryDay()
+                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(
+                                startingTime.Hour,
+                                startingTime.Minute)
+                            //.StartingDailyAt(new TimeOfDay(DateTime.Now.Hour, DateTime.Now.Minute,DateTime.Now.Second)
+                        )
+                ).Build();
+
+            await scheduler.ScheduleJob(job, trigger, stoppingToken);
+        }
     }
-
-    //var recurringTask = new RecurringTask(() =>
-    //    {
-    //        //actual date and time set to midnight
-    //        var now = DateTime.Now.ToLocalTime();
-    //        var actDate = new DateTime(now.Year, now.Month, now.Day);
-
-    //        var day = Define.CalcSunRiseSunSet(actDate, execute);
-
-    //        foreach (var taskToExec in execute.Program.Tasks.OrderBy(tsk => tsk.Id))
-    //        {
-    //            AddTask(new DayTimeTask()
-    //            {
-    //                TaskId = taskToExec.TaskId,
-    //                StartTime = taskToExec.Id == Convert.ToInt32(Day.SunRise)
-    //                    ? day.SunRise
-    //                    : day.SunSet,
-    //                TaskAction = () =>
-    //                {
-    //                    var bOk = Command.Execute(taskToExec.Command);
-
-    //                    _logger.LogInformation(
-    //                        "DayTimeServiceWorker executing Task {string} with command: {string} at {time}. Executed: {bool}",
-    //                        taskToExec.Command,
-    //                        taskToExec.TaskId,
-    //                        DateTimeOffset.Now.ToLocalTime(),
-    //                        bOk);
-    //                }
-    //            });
-    //        }
-    //    },
-    //    startingTime,
-    //    recurrence,
-    //    execute.Program.TaskId);
 }
