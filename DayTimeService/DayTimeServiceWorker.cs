@@ -78,16 +78,29 @@ namespace DayTimeService
             await scheduler.ScheduleJob(job, trigger, stoppingToken);
         }
 
+        /// <summary>
+        /// Build test or normal triggers
+        /// </summary>
+        /// <param name="execute">Parameter for execution</param>
+        /// <param name="recurrence">Interval for recurrence</param>
+        /// <param name="startingTime">Start execution</param>
+        /// <returns>Configured trigger</returns>
         private static ITrigger BuildTrigger(
             Workload execute, 
             TimeSpan recurrence,
             DateTime startingTime)
         {
             return execute.Program.Test is { Active: true }
-                ? BuildTestTrigger(execute, recurrence) 
+                ? BuildTestTrigger(execute) 
                 : BuildDayTimeServiceTrigger(recurrence, startingTime);
         }
 
+        /// <summary>
+        /// Build normal trigger
+        /// </summary>
+        /// <param name="recurrence">Interval for recurrence</param>
+        /// <param name="startingTime">Start execution at this time</param>
+        /// <returns>Normal trigger</returns>
         private static ITrigger BuildDayTimeServiceTrigger(TimeSpan recurrence, DateTime startingTime)
         {
             return TriggerBuilder.Create()
@@ -100,7 +113,12 @@ namespace DayTimeService
                         )).Build();
         }
 
-        private static ITrigger BuildTestTrigger(Workload execute, TimeSpan recurrence)
+        /// <summary>
+        /// Build test trigger
+        /// </summary>
+        /// <param name="execute">Parameters for execution</param>
+        /// <returns>Test trigger</returns>
+        private static ITrigger BuildTestTrigger(Workload execute)
         {
             execute.Program.Recurrence = execute.Program.Test!.Recurrence;
 
