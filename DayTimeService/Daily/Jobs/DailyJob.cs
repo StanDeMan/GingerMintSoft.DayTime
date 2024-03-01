@@ -17,7 +17,7 @@ namespace DayTimeService.Daily.Jobs
 
             var day = Calculate.SunRiseSunSet(actDate, execute!);
 
-            if(execute!.Program.Test!.Active == true)
+            if(execute!.Program.Test!.Active)
             {
                 day.SunRise = DateTime.Now + execute.Program.Test.First!.Value;
                 day.SunSet = DateTime.Now + execute.Program.Test.Second!.Value;
@@ -28,7 +28,7 @@ namespace DayTimeService.Daily.Jobs
 
             var job = JobBuilder.Create<SunRiseSunSetJob>().Build();
 
-            var triggers = execute!.Program.Tasks.OrderBy(tsk => tsk.Id)
+            var triggers = execute.Program.Tasks.OrderBy(tsk => tsk.Id)
                 .Select(tasksToExec => (ISimpleTrigger)TriggerBuilder.Create()
                     .StartAt(tasksToExec.Id == Convert.ToInt32(DayTimeServiceWorker.Day.SunRise)
                         ? day.SunRise
