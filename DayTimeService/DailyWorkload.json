@@ -8,13 +8,13 @@
     },
     "Tasks": [
       {
-        "Id": 1,
+        "Id": 0,
         "TaskId": "SunRise",
         "Offset": 0,
         "Command": "w 23 0"
       },
       {
-        "Id": 2,
+        "Id": 1,
         "TaskId": "SunSet",
         "Offset": 0,
         "Command": "w 23 1"

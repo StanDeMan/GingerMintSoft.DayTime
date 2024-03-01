@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Quartz;
-using Quartz.Impl;
 using JobTask = System.Threading.Tasks.Task;
 
 namespace DayTimeService.Daily.Jobs
@@ -17,28 +16,29 @@ namespace DayTimeService.Daily.Jobs
             var actDate = new DateTime(now.Year, now.Month, now.Day);
 
             var day = Calculate.SunRiseSunSet(actDate, execute!);
-            
-            var scheduler = await new StdSchedulerFactory().GetScheduler();
+//
+            day.SunRise = DateTime.Now.AddSeconds(10);
+            day.SunSet = DateTime.Now.AddSeconds(30); 
+//  
+            var scheduler = await SchedulerBuilder.Create().Build().GetScheduler();
             await scheduler.Start();
 
-            var job = JobBuilder.Create<SunRiseSunSetJob>()
-                .WithIdentity(execute!.Program.TaskId)
-                .Build();
+            var job = JobBuilder.Create<SunRiseSunSetJob>().Build();
 
-            foreach (var taskToExec in execute.Program.Tasks.OrderBy(tsk => tsk.Id))
-            {
-                var trigger = (ISimpleTrigger) TriggerBuilder.Create()
-                    .WithIdentity(taskToExec.TaskId)
-                    .StartAt(taskToExec.Id == Convert.ToInt32(DayTimeServiceWorker.Day.SunRise) 
-                        ? day.SunRise 
-                        : day.SunSet)   
-                    .ForJob("SunRiseSunSetJob")             // identify job with name
-                    .UsingJobData("Command", taskToExec.Command)
-                    .UsingJobData("TaskId", taskToExec.TaskId)
-                    .Build();
-                
-                await scheduler.ScheduleJob(job, trigger);
-            }
+            var triggers = execute!.Program.Tasks.OrderBy(tsk => tsk.Id)
+                .Select(tasksToExec => (ISimpleTrigger)TriggerBuilder.Create()
+                    .StartAt(tasksToExec.Id == Convert.ToInt32(DayTimeServiceWorker.Day.SunRise)
+                        ? day.SunRise
+                        : day.SunSet)
+                    .ForJob(job)
+                    .UsingJobData("Command", tasksToExec.Command)
+                    .UsingJobData("TaskId", tasksToExec.TaskId)
+                    .WithIdentity(tasksToExec.TaskId)
+                    .Build())
+                .Cast<ITrigger>()
+                .ToList();
+
+            await scheduler.ScheduleJob(job, triggers, true);
         }
     }
 }
