@@ -16,10 +16,13 @@ namespace DayTimeService.Daily.Jobs
             var actDate = new DateTime(now.Year, now.Month, now.Day);
 
             var day = Calculate.SunRiseSunSet(actDate, execute!);
-//
-            day.SunRise = DateTime.Now.AddSeconds(10);
-            day.SunSet = DateTime.Now.AddSeconds(30); 
-//  
+
+            if(execute!.Program.Test!.Active == true)
+            {
+                day.SunRise = DateTime.Now + execute.Program.Test.First!.Value;
+                day.SunSet = DateTime.Now + execute.Program.Test.Second!.Value;
+            }
+
             var scheduler = await SchedulerBuilder.Create().Build().GetScheduler();
             await scheduler.Start();
 

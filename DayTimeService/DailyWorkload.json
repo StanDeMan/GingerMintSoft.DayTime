@@ -1,6 +1,12 @@
 {
   "Program": {
-    "Recurrence" : "1:00:00:00",
+    "Test": {
+      "Active":  true,
+      "Recurrence": "0:00:01:00",
+      "First": "0:00:00:10",
+      "Second": "0:00:00:30"
+    },
+    "Recurrence": "1:00:00:00",
     "TaskId": "DayTimeServiceWorker",
     "Coordinate": {
       "Latitude": 48.10507778308992,
@@ -10,13 +16,13 @@
       {
         "Id": 0,
         "TaskId": "SunRise",
-        "Offset": 0,
+        "Offset": 60,
         "Command": "w 23 0"
       },
       {
         "Id": 1,
         "TaskId": "SunSet",
-        "Offset": 0,
+        "Offset": -60,
         "Command": "w 23 1"
       }
     ]

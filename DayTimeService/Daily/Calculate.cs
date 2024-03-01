@@ -56,7 +56,7 @@ namespace DayTimeService.Daily
         /// <returns>Stripped down TimeSpan</returns>
         private static double CalcAndSetBounds(double? offset)
         {
-            return offset!.Value >= -90 && offset.Value <= 90 
+            return offset!.Value >= -120 && offset.Value <= 120 
                 ? offset.Value 
                 : 0;
         }

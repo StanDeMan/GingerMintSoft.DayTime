@@ -37,7 +37,7 @@ namespace DayTimeService
             var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
             _logger.LogInformation(
-                "DayTimeServiceWorker is executed at: {time} with recurrence of {double} hours", 
+                "DayTimeServiceWorker is executed at: {time} with recurrence of {double:F} hours", 
                 startingTime, 
                 recurrence.TotalHours);
 
@@ -74,18 +74,44 @@ namespace DayTimeService
                 .UsingJobData("Execute", JsonConvert.SerializeObject(execute))
                 .Build();
 
-            var trigger = TriggerBuilder.Create()
-                .WithDailyTimeIntervalSchedule(s =>
-                    s.WithIntervalInHours(Convert.ToInt32(recurrence.TotalHours))
-                        .OnEveryDay()
-                        //.StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(
-                        //        startingTime.Hour,
-                        //        startingTime.Minute)
-                        .StartingDailyAt(new TimeOfDay(DateTime.Now.Hour, DateTime.Now.Minute,DateTime.Now.Second)
-                        )
-                ).Build();
-
+            var trigger = BuildTrigger(execute, recurrence, startingTime);
             await scheduler.ScheduleJob(job, trigger, stoppingToken);
+        }
+
+        private static ITrigger BuildTrigger(
+            Workload execute, 
+            TimeSpan recurrence,
+            DateTime startingTime)
+        {
+            return execute.Program.Test is { Active: true }
+                ? BuildTestTrigger(execute, recurrence) 
+                : BuildDayTimeServiceTrigger(recurrence, startingTime);
+        }
+
+        private static ITrigger BuildDayTimeServiceTrigger(TimeSpan recurrence, DateTime startingTime)
+        {
+            return TriggerBuilder.Create()
+                .WithDailyTimeIntervalSchedule(s =>
+                    s.WithIntervalInSeconds(Convert.ToInt32(recurrence.TotalSeconds))
+                        .OnEveryDay()
+                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(
+                            startingTime.Hour,
+                            startingTime.Minute)
+                        )).Build();
+        }
+
+        private static ITrigger BuildTestTrigger(Workload execute, TimeSpan recurrence)
+        {
+            execute.Program.Recurrence = execute.Program.Test!.Recurrence;
+
+            return TriggerBuilder.Create()
+                .WithDailyTimeIntervalSchedule(s =>
+                    s.WithIntervalInSeconds(Convert.ToInt32(execute.Program.Recurrence!.Value.TotalSeconds))
+                        .StartingDailyAt(new TimeOfDay(
+                            DateTime.Now.Hour,
+                            DateTime.Now.Minute,
+                            DateTime.Now.Second)
+                        )).Build();
         }
     }
 }
