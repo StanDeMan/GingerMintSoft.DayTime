@@ -1,7 +1,7 @@
 {
   "Program": {
     "Test": {
-      "Active":  true,
+      "Active":  false,
       "Recurrence": "0:00:01:00",
       "First": "0:00:00:10",
       "Second": "0:00:00:30"
