@@ -37,7 +37,7 @@ namespace DayTimeService
             var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
             _logger.LogInformation(
-                "DayTimeServiceWorker is executed at: {time} with recurrence of {double:F} hours", 
+                "DayTimeServiceWorker will be executed at: {time} with recurrence of {double:F} hours", 
                 startingTime, 
                 recurrence.TotalHours);
 
