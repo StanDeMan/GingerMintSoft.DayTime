@@ -2,13 +2,17 @@ namespace DayTimeService
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var builder = Host.CreateApplicationBuilder(args);
-            builder.Services.AddHostedService<DayTimeServiceWorker>();
+            var host = Host.CreateDefaultBuilder(args)
+                .UseSystemd()
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddHostedService<DayTimeServiceWorker>();
+                })
+                .Build();
 
-            var host = builder.Build();
-            host.Run();
+            await host.RunAsync();
         }
     }
 }
