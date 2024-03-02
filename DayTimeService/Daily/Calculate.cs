@@ -50,6 +50,7 @@ namespace DayTimeService.Daily
 
         /// <summary>
         /// Keep in a time range of +/- 90 minutes
+        /// Else use no offset at all
         /// If it is not in time range the bounds are reset (set to 0)
         /// </summary>
         /// <param name="offset">TimeSpan offset set in DailyWorkload</param>
