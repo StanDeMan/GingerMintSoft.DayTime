@@ -6,7 +6,9 @@ namespace DayTimeService.Execute
     public class Command
     {
         private static readonly StreamWriter Writer;
-        private static readonly ILogger Logger = new Logger<Command>(Logging.Logger.LoggerFactory);
+        private static readonly ILogger<Command> Logger = LoggerFactory
+            .Create(logging => logging.AddConsole())
+            .CreateLogger<Command>();
 
         /// <summary>
         /// Constructor:
