@@ -72,7 +72,7 @@ namespace DayTimeService.Daily
         /// <typeparam name="T">For this type</typeparam>
         /// <param name="number">Check this number</param>
         /// <returns>Negative: -1 v positive: 1 and for zero: 0</returns>
-        public static int IsPositiveOrNegative<T>(T number) where T : ISignedNumber<T>
+        private static int IsPositiveOrNegative<T>(T number) where T : ISignedNumber<T>
         {
             if (number == T.Zero) return 0;
 
