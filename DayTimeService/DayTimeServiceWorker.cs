@@ -23,7 +23,10 @@ namespace DayTimeService
         private readonly ILogger<DayTimeServiceWorker> _logger = logger;
 
         /// <summary>
-        /// Long term service
+        /// Long term service:
+        /// Switch pv accumulator storage by sun rise and sun set 
+        /// times calculated by geo coordinates read from a json
+        /// 
         /// </summary>
         /// <param name="stoppingToken">Stopping long term service</param>
         /// <returns>Exit code</returns>
@@ -61,7 +64,7 @@ namespace DayTimeService
         /// sun set times calculated by geo coordinates
         /// </summary>
         /// <param name="stoppingToken">Let the service know if it should stop</param>
-        /// <returns></returns>
+        /// <returns>Exit code</returns>
         private async Task DayTimeScheduler(CancellationToken stoppingToken)
         {
             _logger.LogInformation(
