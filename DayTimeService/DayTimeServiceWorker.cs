@@ -26,7 +26,6 @@ namespace DayTimeService
         /// Long term service:
         /// Switch pv accumulator storage by sun rise and sun set 
         /// times calculated by geo coordinates read from a json
-        /// 
         /// </summary>
         /// <param name="stoppingToken">Stopping long term service</param>
         /// <returns>Exit code</returns>
