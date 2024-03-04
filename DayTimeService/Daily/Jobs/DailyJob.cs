@@ -25,11 +25,13 @@ namespace DayTimeService.Daily.Jobs
                 : Calculate.SunRiseSunSet(actDate, execute);
 
             // for testing replace execution values 
-            if(execute!.Program.Test!.Active)
+            if(execute.Program.Test!.Active)
             {
                 day.SunRise = DateTime.Now + execute.Program.Test.First!.Value;
                 day.SunSet = DateTime.Now + execute.Program.Test.Second!.Value;
             }
+
+            LogDailyJob(execute, day);
 
             var scheduler = await SchedulerBuilder.Create().Build().GetScheduler();
             await scheduler.Start();
@@ -38,7 +40,7 @@ namespace DayTimeService.Daily.Jobs
 
             var triggers = execute.Program.Tasks.OrderBy(tsk => tsk.Id)
                 .Select(tasksToExec => (ISimpleTrigger)TriggerBuilder.Create()
-                    .StartAt(tasksToExec.Id == Convert.ToInt32(DayTimeServiceWorker.Day.SunRise)
+                    .StartAt(tasksToExec.Id == Convert.ToInt32(DayTimeServiceWorker.EnmDay.SunRise)
                         ? day.SunRise
                         : day.SunSet)
                     .ForJob(job)
