@@ -12,10 +12,10 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger) : BackgroundService
     {
-        public enum EnmDay { Undefined = -1, SunRise = 0, SunSet = 1,  }
         private bool _ledOn;
         private readonly ILogger<DayTimeServiceWorker> _logger = logger;
-
+        public enum EnmDay { Undefined = -1, SunRise = 0, SunSet = 1,  }
+        
         /// <summary>
         /// Long term service
         /// </summary>
@@ -23,25 +23,19 @@ namespace DayTimeService
         /// <returns>Exit code</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation(
-                "DayTimeServiceWorker started at: {time}", 
-                DateTimeOffset.Now.ToLocalTime());
+            var error = false;
+            const int blinkError = 100;
+            const int blinkNormal = 250;
 
-            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows 
-                ? $@"{currentPath}\DailyWorkload.json" 
-                : $@"{currentPath}/DailyWorkload.json");
-
-            // start importing program every midnight after 5 minutes
-            var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
-            var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
-
-            _logger.LogInformation(
-                "DayTimeServiceWorker will be executed at: {time} with recurrence of {double:F} hours", 
-                startingTime, 
-                recurrence.TotalHours);
-
-            await StartDayTimeScheduler(stoppingToken, execute, recurrence, startingTime);
+            try
+            {
+                await DayTimeScheduler(stoppingToken);
+            }
+            catch (Exception e)
+            {
+                error = true;
+                _logger.LogError("Error at DayTimeServiceWorker.ExecuteAsync: {string}", e);
+            }
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -49,8 +43,40 @@ namespace DayTimeService
                 Command.Execute((_ledOn ? "w 14 1" : "w 14 0"));
                 _ledOn = !_ledOn;
 
-                await Task.Delay(250, stoppingToken);
+                await Task.Delay(error 
+                    ? blinkError 
+                    : blinkNormal, 
+                    stoppingToken);
             }
+        }
+
+        /// <summary>
+        /// Switch pv accumulator storage by sun rise and
+        /// sun set times calculated by geo coordinates
+        /// </summary>
+        /// <param name="stoppingToken">Let the service know if it should stop</param>
+        /// <returns></returns>
+        private async Task DayTimeScheduler(CancellationToken stoppingToken)
+        {
+            _logger.LogInformation(
+                "DayTimeServiceWorker started at: {time}",
+                DateTimeOffset.Now.ToLocalTime());
+
+            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
+                ? $@"{currentPath}\DailyWorkload.json"
+                : $@"{currentPath}/DailyWorkload.json");
+
+            // start importing program every midnight after 5 minutes
+            var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
+            var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
+
+            _logger.LogInformation(
+                "DayTimeServiceWorker will be executed at: {time} with recurrence of {double:F} hours",
+                startingTime,
+                recurrence.TotalHours);
+
+            await StartDayTimeScheduler(stoppingToken, execute, recurrence, startingTime);
         }
 
         /// <summary>
