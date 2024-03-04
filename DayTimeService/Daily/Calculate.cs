@@ -37,13 +37,13 @@ namespace DayTimeService.Daily
             day.SunRise = day.SunRise.Add(
                 TimeSpan.FromMinutes(
                     CalcAndSetBounds(
-                        execute.Program.Tasks[Convert.ToInt32(DayTimeServiceWorker.Day.SunRise)]
+                        execute.Program.Tasks[Convert.ToInt32(DayTimeServiceWorker.EnmDay.SunRise)]
                             .Offset)));
 
             day.SunSet = day.SunSet.Add(
                 TimeSpan.FromMinutes(
                     CalcAndSetBounds(
-                        execute.Program.Tasks[Convert.ToInt32(DayTimeServiceWorker.Day.SunSet)]
+                        execute.Program.Tasks[Convert.ToInt32(DayTimeServiceWorker.EnmDay.SunSet)]
                             .Offset)));
 
             return day;
