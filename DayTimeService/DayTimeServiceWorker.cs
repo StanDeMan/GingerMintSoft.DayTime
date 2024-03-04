@@ -12,10 +12,16 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger) : BackgroundService
     {
+        public enum EnmDay
+        {
+            Undefined = -1, 
+            SunRise = 0, 
+            SunSet = 1,
+        }
+
         private bool _ledOn;
         private readonly ILogger<DayTimeServiceWorker> _logger = logger;
-        public enum EnmDay { Undefined = -1, SunRise = 0, SunSet = 1,  }
-        
+
         /// <summary>
         /// Long term service
         /// </summary>
