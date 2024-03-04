@@ -12,7 +12,7 @@ namespace DayTimeService
 {
     public class DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger) : BackgroundService
     {
-        public enum Day { Undefined = 9999, SunRise = 0, SunSet = 1,  }
+        public enum Day { Undefined = -1, SunRise = 0, SunSet = 1,  }
         private bool _ledOn;
         private readonly ILogger<DayTimeServiceWorker> _logger = logger;
 
@@ -37,11 +37,11 @@ namespace DayTimeService
             var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
             _logger.LogInformation(
-                "DayTimeServiceWorker is executed at: {time} with recurrence of {double:F} hours", 
+                "DayTimeServiceWorker will be executed at: {time} with recurrence of {double:F} hours", 
                 startingTime, 
                 recurrence.TotalHours);
 
-            await StartSunRiseSunSetScheduler(stoppingToken, execute, recurrence, startingTime);
+            await StartDayTimeScheduler(stoppingToken, execute, recurrence, startingTime);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -61,7 +61,7 @@ namespace DayTimeService
         /// <param name="recurrence">In which interval should the execution take place</param>
         /// <param name="startingTime">The first trigger time</param>
         /// <returns></returns>
-        private static async Task StartSunRiseSunSetScheduler(CancellationToken stoppingToken,
+        private static async Task StartDayTimeScheduler(CancellationToken stoppingToken,
             Workload execute,
             TimeSpan recurrence,
             DateTime startingTime)
@@ -78,16 +78,29 @@ namespace DayTimeService
             await scheduler.ScheduleJob(job, trigger, stoppingToken);
         }
 
+        /// <summary>
+        /// Build test or normal triggers
+        /// </summary>
+        /// <param name="execute">Parameter for execution</param>
+        /// <param name="recurrence">Interval for recurrence</param>
+        /// <param name="startingTime">Start execution</param>
+        /// <returns>Configured trigger</returns>
         private static ITrigger BuildTrigger(
             Workload execute, 
             TimeSpan recurrence,
             DateTime startingTime)
         {
             return execute.Program.Test is { Active: true }
-                ? BuildTestTrigger(execute, recurrence) 
+                ? BuildTestTrigger(execute) 
                 : BuildDayTimeServiceTrigger(recurrence, startingTime);
         }
 
+        /// <summary>
+        /// Build normal trigger
+        /// </summary>
+        /// <param name="recurrence">Interval for recurrence</param>
+        /// <param name="startingTime">Start execution at this time</param>
+        /// <returns>Normal trigger</returns>
         private static ITrigger BuildDayTimeServiceTrigger(TimeSpan recurrence, DateTime startingTime)
         {
             return TriggerBuilder.Create()
@@ -100,7 +113,12 @@ namespace DayTimeService
                         )).Build();
         }
 
-        private static ITrigger BuildTestTrigger(Workload execute, TimeSpan recurrence)
+        /// <summary>
+        /// Build test trigger
+        /// </summary>
+        /// <param name="execute">Parameters for execution</param>
+        /// <returns>Test trigger</returns>
+        private static ITrigger BuildTestTrigger(Workload execute)
         {
             execute.Program.Recurrence = execute.Program.Test!.Recurrence;
 
