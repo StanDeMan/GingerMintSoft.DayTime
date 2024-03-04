@@ -1,4 +1,5 @@
-﻿using GingerMintSoft.DayTime;
+﻿using System.Numerics;
+using GingerMintSoft.DayTime;
 
 namespace DayTimeService.Daily
 {
@@ -20,7 +21,7 @@ namespace DayTimeService.Daily
                     Longitude = execute.Program.Coordinate.Longitude
                 });
             
-            day = AppendOffsetTimes(day, execute);
+            day = AppendTimesOffset(day, execute);
 
             return day;
         }
@@ -31,7 +32,7 @@ namespace DayTimeService.Daily
         /// <param name="day">For this day</param>
         /// <param name="execute">In this object is the offset included</param>
         /// <returns>Times of sun rise and sun set for this day with offset</returns>
-        private static Day AppendOffsetTimes(Day day, Workload execute)
+        private static Day AppendTimesOffset(Day day, Workload execute)
         {
             day.SunRise = day.SunRise.Add(
                 TimeSpan.FromMinutes(
@@ -55,11 +56,27 @@ namespace DayTimeService.Daily
         /// </summary>
         /// <param name="offset">TimeSpan offset set in DailyWorkload</param>
         /// <returns>Stripped down TimeSpan</returns>
-        private static double CalcAndSetBounds(double? offset)
+        private static double CalcAndSetBounds(double offset)
         {
-            return offset!.Value >= -120 && offset.Value <= 120 
-                ? offset.Value 
-                : 0;
+            // take this range from negative to positive value
+            const int range = 120;
+
+            return offset is >= -range and <= range 
+                ? offset 
+                : range * IsPositiveOrNegative(offset);
+        }
+
+        /// <summary>
+        /// Check sign of value
+        /// </summary>
+        /// <typeparam name="T">For this type</typeparam>
+        /// <param name="number">Check this number</param>
+        /// <returns>Negative: -1 v positive: 1 and for zero: 0</returns>
+        public static int IsPositiveOrNegative<T>(T number) where T : ISignedNumber<T>
+        {
+            if (number == T.Zero) return 0;
+
+            return T.IsPositive(number) ? 1 : -1;
         }
     }
 }
