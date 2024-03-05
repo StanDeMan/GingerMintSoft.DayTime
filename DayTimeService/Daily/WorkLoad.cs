@@ -4,9 +4,15 @@ namespace DayTimeService.Daily
 {
     public class Application
     {
-        public Workload? ReadWorkload(string path)
+        /// <summary>
+        /// Read DailyWorkload.json file
+        /// and build belonging object
+        /// </summary>
+        /// <param name="pathFile">Path and file to DailyWorkload.json</param>
+        /// <returns>Filled Workload object</returns>
+        public Workload? ReadWorkload(string pathFile)
         {
-            using StreamReader reader = new(path);
+            using StreamReader reader = new(pathFile);
             var json = reader.ReadToEnd();
             var workLoad = JsonConvert.DeserializeObject<Workload>(json);
         
