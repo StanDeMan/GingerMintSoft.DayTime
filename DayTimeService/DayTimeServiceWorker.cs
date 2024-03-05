@@ -3,6 +3,7 @@ using DayTimeService.Daily;
 using DayTimeService.Daily.Jobs;
 using DayTimeService.Execute;
 using DayTimeService.Hardware;
+using DayTimeService.Services;
 using Newtonsoft.Json;
 using Quartz;
 using Quartz.Impl;
@@ -10,7 +11,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace DayTimeService
 {
-    public class DayTimeServiceWorker(ILogger<DayTimeServiceWorker> logger) : BackgroundService
+    public class DayTimeServiceWorker(
+        ILogger<DayTimeServiceWorker> logger, 
+        ArgumentService arguments) : BackgroundService
     {
         public enum EnmDay
         {
@@ -70,10 +73,11 @@ namespace DayTimeService
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
+            var workloadFile = arguments.Read().WorkloadFile ?? "DailyWorkload.json";
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
-                ? $@"{currentPath}\DailyWorkload.json"
-                : $"{currentPath}/DailyWorkload.json");
+                ? $@"{currentPath}\{workloadFile}"
+                : $"{currentPath}/{workloadFile}");
 
             // start calculate sun rise/set every midnight after 5 seconds
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
