@@ -1,12 +1,13 @@
-﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
+{
   "profiles": {
     "DayTimeService": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
+      "commandLineArgs": "DailyWorkloadShort.json",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true
     }
-  }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json"
 }
