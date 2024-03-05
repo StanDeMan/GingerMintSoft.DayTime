@@ -24,13 +24,6 @@ namespace DayTimeService.Daily.Jobs
                 ? CreateTestExecutionTimes(execute) 
                 : Calculate.SunRiseSunSet(actDate, execute);
 
-            // for testing replace execution values 
-            if(execute.Program.Test!.Active)
-            {
-                day.SunRise = DateTime.Now + execute.Program.Test.First!.Value;
-                day.SunSet = DateTime.Now + execute.Program.Test.Second!.Value;
-            }
-
             LogDailyJob(execute, day);
 
             var scheduler = await SchedulerBuilder.Create().Build().GetScheduler();
