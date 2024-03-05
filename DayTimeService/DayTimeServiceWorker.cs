@@ -14,13 +14,13 @@ namespace DayTimeService
     {
         public enum EnmDay
         {
+            // ReSharper disable once UnusedMember.Global
             Undefined = -1, 
             SunRise = 0, 
             SunSet = 1,
         }
 
         private bool _ledOn;
-        private readonly ILogger<DayTimeServiceWorker> _logger = logger;
 
         /// <summary>
         /// Long term service:
@@ -42,7 +42,7 @@ namespace DayTimeService
             catch (Exception e)
             {
                 error = true;
-                _logger.LogError("Error at DayTimeServiceWorker.ExecuteAsync: {string}", e);
+                logger.LogError("Error at DayTimeServiceWorker.ExecuteAsync: {string}", e);
             }
 
             while (!stoppingToken.IsCancellationRequested)
@@ -66,20 +66,20 @@ namespace DayTimeService
         /// <returns>Exit code</returns>
         private async Task DayTimeScheduler(CancellationToken stoppingToken)
         {
-            _logger.LogInformation(
+            logger.LogInformation(
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
                 ? $@"{currentPath}\DailyWorkload.json"
-                : $@"{currentPath}/DailyWorkload.json");
+                : $"{currentPath}/DailyWorkload.json");
 
-            // start importing program every midnight after 5 minutes
+            // start calculate sun rise/set every midnight after 5 seconds
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
             var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
 
-            _logger.LogInformation(
+            logger.LogInformation(
                 "DayTimeServiceWorker will be executed at: {time} with recurrence of {double:F} hours",
                 startingTime,
                 recurrence.TotalHours);
