@@ -8,9 +8,9 @@ namespace DayTimeService.Services
 
         public Arguments Read()
         {
-            _arguments.WorkloadFile = args[0]
-                !.Contains(".json", StringComparison.OrdinalIgnoreCase)     // check if json file
-                ? args[0] : "";                                             // no file      
+            _arguments.WorkloadFile = args[0]!.Contains(".json", StringComparison.OrdinalIgnoreCase)     
+                ? args[0]                                           // take json file
+                : null;                                             // no file      
 
             _arguments.UseDefaultWorkload = args[1];
 
