@@ -2,7 +2,6 @@
   "profiles": {
     "DayTimeService": {
       "commandName": "Project",
-      "commandLineArgs": "DailyWorkloadShort.json default",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       },
