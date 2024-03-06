@@ -20,7 +20,7 @@ namespace DayTimeService.Daily.Jobs
             var now = DateTime.Now.ToLocalTime();
             var actDate = new DateTime(now.Year, now.Month, now.Day);
 
-            var day = execute!.Program.Test!.Active 
+            var day = execute!.Program!.Test!.Active 
                 ? CreateTestExecutionTimes(execute) 
                 : Calculate.SunRiseSunSet(actDate, execute);
 
@@ -58,7 +58,7 @@ namespace DayTimeService.Daily.Jobs
                 "DayTimeServiceWorker executing at sunrise {time} and at sunset: {time}. Test status: {bool}",
                 day.SunRise,
                 day.SunSet,
-                execute.Program.Test!.Active);
+                execute.Program!.Test!.Active);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace DayTimeService.Daily.Jobs
         {
             return new Day
             {
-                SunRise = DateTime.Now + execute.Program.Test!.First!.Value,
+                SunRise = DateTime.Now + execute.Program!.Test!.First!.Value,
                 SunSet = DateTime.Now + execute.Program.Test.Second!.Value
             };
         }
