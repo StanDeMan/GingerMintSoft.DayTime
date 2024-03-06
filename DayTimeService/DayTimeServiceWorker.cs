@@ -73,7 +73,7 @@ namespace DayTimeService
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
-            var workloadFile = arguments.Read().WorkloadFile ?? "DailyWorkload.json";
+            var workloadFile = arguments.Read().WorkloadFile ?? arguments.Read().WorkloadFileDefaultName;
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
                 ? $@"{currentPath}\{workloadFile}"
@@ -81,7 +81,7 @@ namespace DayTimeService
 
             // start calculate sun rise/set every midnight after 5 seconds
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
-            var recurrence = execute!.Program.Recurrence ?? TimeSpan.FromDays(1);
+            var recurrence = execute!.Program!.Recurrence ?? TimeSpan.FromDays(1);
 
             logger.LogInformation(
                 "DayTimeServiceWorker will be executed at: {time} with recurrence of {double:F} hours",
@@ -108,7 +108,7 @@ namespace DayTimeService
             await scheduler.Start(stoppingToken);
 
             var job = JobBuilder.Create<DailyJob>()
-                .WithIdentity(execute.Program.TaskId)
+                .WithIdentity(execute.Program!.TaskId)
                 .UsingJobData("Execute", JsonConvert.SerializeObject(execute))
                 .Build();
 
@@ -128,7 +128,7 @@ namespace DayTimeService
             TimeSpan recurrence,
             DateTime startingTime)
         {
-            return execute.Program.Test is { Active: true }
+            return execute.Program!.Test is { Active: true }
                 ? BuildTestTrigger(execute) 
                 : BuildDayTimeServiceTrigger(recurrence, startingTime);
         }
@@ -158,7 +158,7 @@ namespace DayTimeService
         /// <returns>Test trigger</returns>
         private static ITrigger BuildTestTrigger(Workload execute)
         {
-            execute.Program.Recurrence = execute.Program.Test!.Recurrence;
+            execute.Program!.Recurrence = execute.Program.Test!.Recurrence;
 
             return TriggerBuilder.Create()
                 .WithDailyTimeIntervalSchedule(s =>

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using System.Text;
 
 namespace DayTimeService.Services
 {
@@ -8,8 +8,11 @@ namespace DayTimeService.Services
 
         public Arguments Read()
         {
-            _arguments.WorkloadFile = args[0];
-            _arguments.StartTime = DateTime.ParseExact(args[1]!, "dd-MM-yyyy-HH:mm", CultureInfo.CreateSpecificCulture("DE-de"));
+            _arguments.WorkloadFile = args[0]
+                !.Contains(".json", StringComparison.OrdinalIgnoreCase)     // check if json file
+                ? args[0] : "";                                             // no file      
+
+            _arguments.UseDefaultWorkload = args[1];
 
             return _arguments;
         }
@@ -17,7 +20,8 @@ namespace DayTimeService.Services
 
     public class Arguments
     {
+        public string WorkloadFileDefaultName { get; private set; } = new StringBuilder().Append("DailyWorkload.json").ToString();
         public string? WorkloadFile { get; set; }
-        public DateTime? StartTime { get; set; }
+        public string? UseDefaultWorkload { get; set; }
     }
 }
