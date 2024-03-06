@@ -20,19 +20,22 @@ namespace DayTimeService.Daily
 
         public Workload? ReadDefaultWorkload()
         {
-            const string json = """
-                                {"Program":
-                                {"Recurrence":"1:00:00:00",
-                                "TaskId":"DayTimeServiceWorker",
-                                "Coordinate":{"Latitude":48.1056,"Longitude":7.909},
-                                "Tasks":
-                                [
-                                {"Id":0,"TaskId":"SunRise","Offset":60,"Command":"w 23 0"},
-                                {"Id":1,"TaskId":"SunSet","Offset":-60,"Command":"w 23 1"}
-                                ]}}
-                                """;
-
-            return JsonConvert.DeserializeObject<Workload>(json);
+            return JsonConvert.DeserializeObject<Workload>(
+                """
+                {"Program":
+                {"Recurrence":"1:00:00:00",
+                "TaskId":"DayTimeServiceWorker",
+                "Coordinate":
+                {
+                "Latitude":48.1056,
+                "Longitude":7.909
+                },
+                "Tasks":
+                [
+                {"Id":0,"TaskId":"SunRise","Offset":60,"Command":"w 23 0"},
+                {"Id":1,"TaskId":"SunSet","Offset":-60,"Command":"w 23 1"}
+                ]}}
+                """);
         }
     }
 
