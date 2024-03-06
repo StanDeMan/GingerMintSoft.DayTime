@@ -19,8 +19,8 @@ namespace DayTimeService.Test
                         Latitude = 48.11,
                         Longitude = 7.91
                     },
-                    Tasks = new List<DayTask>
-                    {
+                    Tasks =
+                    [
                         new()
                         {
                             Id = 0,
@@ -28,6 +28,7 @@ namespace DayTimeService.Test
                             Offset = 121,
                             Command = "Command 1"
                         },
+
                         new()
                         {
                             Id = 1,
@@ -35,7 +36,7 @@ namespace DayTimeService.Test
                             Offset = -121,
                             Command = "Command 1"
                         }
-                    }
+                    ]
                 }
             };
 
