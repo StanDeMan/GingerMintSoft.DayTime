@@ -18,4 +18,8 @@
   <ItemGroup>
     <ProjectReference Include="..\GingerMintSoft.DayTime\GingerMintSoft.DayTime.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CmdLine\" />
+  </ItemGroup>
 </Project>
