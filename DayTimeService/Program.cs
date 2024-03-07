@@ -1,3 +1,7 @@
+using CommandLine;
+using DayTimeService.CmdLine;
+using DayTimeService.Services;
+
 namespace DayTimeService
 {
     public class Program
@@ -8,6 +12,9 @@ namespace DayTimeService
                 .UseSystemd()
                 .ConfigureServices((_, services) =>
                 {
+                    services.AddSingleton(new ArgumentService(new Parser(with => 
+                        with.EnableDashDash = true)
+                        .ParseArguments<Options>(args)));
                     services.AddHostedService<DayTimeServiceWorker>();
                 })
                 .Build();

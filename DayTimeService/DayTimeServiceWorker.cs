@@ -3,6 +3,7 @@ using DayTimeService.Daily;
 using DayTimeService.Daily.Jobs;
 using DayTimeService.Execute;
 using DayTimeService.Hardware;
+using DayTimeService.Services;
 using Newtonsoft.Json;
 using Quartz;
 using Quartz.Impl;
@@ -11,8 +12,11 @@ using Task = System.Threading.Tasks.Task;
 namespace DayTimeService
 {
     public class DayTimeServiceWorker(
-        ILogger<DayTimeServiceWorker> logger) : BackgroundService
+        ILogger<DayTimeServiceWorker> logger,
+        ArgumentService arguments) : BackgroundService
     {
+        public ArgumentService Arguments { get; } = arguments;
+
         public enum EnmDay
         {
             // ReSharper disable once UnusedMember.Global
@@ -71,7 +75,7 @@ namespace DayTimeService
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
-            var workloadFile = "DailyWorkload.json";
+            var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().WorkloadFileDefaultName;
             var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
                 ? $@"{currentPath}\{workloadFile}"
