@@ -115,7 +115,7 @@ namespace DayTimeService
             catch (Exception e)
             {
                 logger.LogInformation(
-                    "DayTimeServiceWorker file not found: {string}", e);
+                    "DayTimeServiceWorker workload file error: {string}", e);
             }
 
             execute ??= new Application().ReadDefaultWorkload();
