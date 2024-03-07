@@ -75,11 +75,23 @@ namespace DayTimeService
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
-            var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().WorkloadFileDefaultName;
-            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
-                ? $@"{currentPath}\{workloadFile}"
-                : $"{currentPath}/{workloadFile}");
+            Workload? execute = null;
+
+            try
+            {
+                var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().WorkloadFileDefault;
+                var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
+                    ? $@"{currentPath}\{workloadFile}"
+                    : $"{currentPath}/{workloadFile}");
+            }
+            catch (Exception e)
+            {
+                logger.LogInformation(
+                    "DayTimeServiceWorker file not found: {string}", e);
+            }
+
+            execute ??= new Application().ReadDefaultWorkload();
 
             // start calculate sun rise/set every midnight after 5 seconds
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
