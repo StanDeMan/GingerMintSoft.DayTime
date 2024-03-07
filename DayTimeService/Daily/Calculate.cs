@@ -17,7 +17,7 @@ namespace DayTimeService.Daily
                 date,
                 new GingerMintSoft.DayTime.Coordinate()
                 {
-                    Latitude = execute.Program.Coordinate.Latitude,
+                    Latitude = execute.Program!.Coordinate.Latitude,
                     Longitude = execute.Program.Coordinate.Longitude
                 });
             
@@ -37,7 +37,7 @@ namespace DayTimeService.Daily
             day.SunRise = day.SunRise.Add(
                 TimeSpan.FromMinutes(
                     CalcAndSetBounds(
-                        execute.Program.Tasks[Convert.ToInt32(DayTimeServiceWorker.EnmDay.SunRise)]
+                        execute.Program!.Tasks[Convert.ToInt32(DayTimeServiceWorker.EnmDay.SunRise)]
                             .Offset)));
 
             day.SunSet = day.SunSet.Add(
