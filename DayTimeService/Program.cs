@@ -12,8 +12,7 @@ namespace DayTimeService
                 .UseSystemd()
                 .ConfigureServices((_, services) =>
                 {
-                    services.AddSingleton(new ArgumentService(new Parser(with => 
-                        with.EnableDashDash = true)
+                    services.AddSingleton(new ArgumentService(new Parser(with => with.EnableDashDash = true)
                         .ParseArguments<Options>(args)));
                     services.AddHostedService<DayTimeServiceWorker>();
                 })
