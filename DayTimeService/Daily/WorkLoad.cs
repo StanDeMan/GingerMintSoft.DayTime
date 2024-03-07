@@ -65,6 +65,14 @@ namespace DayTimeService.Daily
         public required string TaskId { get; set; }
         public double Offset { get; set; }
         public required string Command { get; set; }
+        public List<Instruction>? Instructions { get; set; }
+    }
+
+    public class Instruction
+    {
+        public int? Id { get; set; }
+        public string? TaskId { get; set; }
+        public string? Command { get; set; }
     }
 
     public class Test
