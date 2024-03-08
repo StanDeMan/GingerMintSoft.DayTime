@@ -106,7 +106,7 @@ namespace DayTimeService
 
             try
             {
-                var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().WorkloadFileDefault;
+                var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().DefaultWorkloadFile;
                 var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
                     ? $@"{currentPath}\{workloadFile}"
