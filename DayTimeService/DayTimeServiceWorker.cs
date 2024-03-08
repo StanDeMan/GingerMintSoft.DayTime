@@ -108,21 +108,11 @@ namespace DayTimeService
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
-            Workload? execute = null;
-
-            try
-            {
-                var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().DefaultWorkloadFile;
-                var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
-                    ? $@"{currentPath}\{workloadFile}"
-                    : $"{currentPath}/{workloadFile}");
-            }
-            catch (Exception e)
-            {
-                logger.LogInformation(
-                    "DayTimeServiceWorker workload file error: {string}", e);
-            }
+            var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().DefaultWorkloadFile;
+            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows 
+                ? $@"{currentPath}\{workloadFile}"
+                : $"{currentPath}/{workloadFile}");
 
             execute ??= new Application().ReadDefaultWorkload();
 
