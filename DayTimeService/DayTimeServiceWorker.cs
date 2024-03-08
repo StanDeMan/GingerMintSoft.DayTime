@@ -15,6 +15,7 @@ namespace DayTimeService
         ILogger<DayTimeServiceWorker> logger,
         ArgumentService arguments) : BackgroundService
     {
+        private bool _ledOn;
         public ArgumentService Arguments { get; } = arguments;
 
         public enum EnmDay
@@ -34,8 +35,6 @@ namespace DayTimeService
             Blink = 2
         }
 
-        private bool _ledOn;
-
         /// <summary>
         /// Long term service:
         /// Switch pv accumulator storage by sun rise and sun set 
@@ -45,7 +44,6 @@ namespace DayTimeService
         /// <returns>Exit code</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var error = false;
             const int blinkError = 100;
             const int blinkNormal = 250;
 
@@ -57,7 +55,6 @@ namespace DayTimeService
             }
             catch (Exception e)
             {
-                error = true;
                 logger.LogError("Error at DayTimeServiceWorker.ExecuteAsync: {string}", e);
             }
 
@@ -69,7 +66,7 @@ namespace DayTimeService
                 Command.Execute(((_ledOn ? ledOn : ledOff)!));
                 _ledOn = !_ledOn;
 
-                await Task.Delay(error 
+                await Task.Delay(Arguments.Read().Errors!.Any() 
                     ? blinkError 
                     : blinkNormal, 
                     stoppingToken);
