@@ -5,7 +5,7 @@ namespace DayTimeService.CmdLine
 {
     public class Options
     {
-        [Option("filename", Required = false, HelpText = "Input filename.")]
+        [Option('f', "filename", Required = false, HelpText = "Input filename.")]
         public string? Filename { get; set; }
 
         [Usage(ApplicationAlias = "DayTime")]
