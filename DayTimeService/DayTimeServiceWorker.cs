@@ -22,7 +22,16 @@ namespace DayTimeService
             // ReSharper disable once UnusedMember.Global
             Undefined = -1, 
             SunRise = 0, 
-            SunSet = 1,
+            SunSet = 1
+        }
+
+        public enum EnmInstruction
+        {
+            // ReSharper disable once UnusedMember.Global
+            Undefined = -1,
+            On = 0,
+            Off = 1,
+            Blink = 2
         }
 
         private bool _ledOn;
@@ -40,9 +49,11 @@ namespace DayTimeService
             const int blinkError = 100;
             const int blinkNormal = 250;
 
+            Workload? execute = null;
+
             try
             {
-                await DayTimeScheduler(stoppingToken);
+                execute = await DayTimeScheduler(stoppingToken);
             }
             catch (Exception e)
             {
@@ -50,10 +61,12 @@ namespace DayTimeService
                 logger.LogError("Error at DayTimeServiceWorker.ExecuteAsync: {string}", e);
             }
 
+            var (ledOn, ledOff) = ReadLedInstructions(execute!);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 // do some blinking here
-                Command.Execute((_ledOn ? "w 14 1" : "w 14 0"));
+                Command.Execute(((_ledOn ? ledOn : ledOff)!));
                 _ledOn = !_ledOn;
 
                 await Task.Delay(error 
@@ -64,22 +77,48 @@ namespace DayTimeService
         }
 
         /// <summary>
+        /// Extract led on/off instruction
+        /// </summary>
+        /// <param name="execute">Workload with instruction</param>
+        /// <returns>ledOn and ledOff instructions</returns>
+        private static (string?, string?) ReadLedInstructions(Workload execute)
+        {
+            var instructions = execute.Program!.Tasks[(int)EnmInstruction.Blink].Instructions;
+            var ledOn = instructions!.Find(on => on.Id == (int)EnmInstruction.On)!.Command;
+            var ledOff = instructions.Find(on => on.Id == (int)EnmInstruction.Off)!.Command;
+
+            return (ledOn, ledOff);
+        }
+
+        /// <summary>
         /// Switch pv accumulator storage by sun rise and
         /// sun set times calculated by geo coordinates
         /// </summary>
         /// <param name="stoppingToken">Let the service know if it should stop</param>
         /// <returns>Exit code</returns>
-        private async Task DayTimeScheduler(CancellationToken stoppingToken)
+        private async Task<Workload> DayTimeScheduler(CancellationToken stoppingToken)
         {
             logger.LogInformation(
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
-            var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().WorkloadFileDefaultName;
-            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
-                ? $@"{currentPath}\{workloadFile}"
-                : $"{currentPath}/{workloadFile}");
+            Workload? execute = null;
+
+            try
+            {
+                var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().WorkloadFileDefault;
+                var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
+                    ? $@"{currentPath}\{workloadFile}"
+                    : $"{currentPath}/{workloadFile}");
+            }
+            catch (Exception e)
+            {
+                logger.LogInformation(
+                    "DayTimeServiceWorker workload file error: {string}", e);
+            }
+
+            execute ??= new Application().ReadDefaultWorkload();
 
             // start calculate sun rise/set every midnight after 5 seconds
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
@@ -91,6 +130,8 @@ namespace DayTimeService
                 recurrence.TotalHours);
 
             await StartDayTimeScheduler(stoppingToken, execute, recurrence, startingTime);
+
+            return execute;
         }
 
         /// <summary>

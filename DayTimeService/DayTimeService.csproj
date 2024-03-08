@@ -19,4 +19,10 @@
   <ItemGroup>
     <ProjectReference Include="..\GingerMintSoft.DayTime\GingerMintSoft.DayTime.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="DailyWorkload.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

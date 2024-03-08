@@ -18,23 +18,54 @@ namespace DayTimeService.Daily
             return JsonConvert.DeserializeObject<Workload>(json);
         }
 
+        /// <summary>
+        /// Read the workload default settings
+        /// </summary>
+        /// <returns>Default settings</returns>
         public Workload? ReadDefaultWorkload()
         {
             return JsonConvert.DeserializeObject<Workload>(
                 """
-                {"Program":
-                {"Recurrence":"1:00:00:00",
-                "TaskId":"DayTimeServiceWorker",
-                "Coordinate":
                 {
-                "Latitude":48.1056,
-                "Longitude":7.909
-                },
-                "Tasks":
-                [
-                {"Id":0,"TaskId":"SunRise","Offset":60,"Command":"w 23 0"},
-                {"Id":1,"TaskId":"SunSet","Offset":-60,"Command":"w 23 1"}
-                ]}}
+                  "Program": {
+                    "Recurrence": "1:00:00:00",
+                    "TaskId": "DayTimeServiceWorker",
+                    "Coordinate": {
+                      "Latitude": 48.10507778308992,
+                      "Longitude": 7.90856839921184
+                    },
+                    "Tasks": [
+                      {
+                        "Id": 0,
+                        "TaskId": "SunRise",
+                        "Offset": 60,
+                        "Command": "w 23 0"
+                      },
+                      {
+                        "Id": 1,
+                        "TaskId": "SunSet",
+                        "Offset": -60,
+                        "Command": "w 23 1"
+                      },
+                      {
+                        "Id": 2,
+                        "TaskId": "Blink",
+                        "Instructions": [
+                          {
+                            "Id": 0,
+                            "TaskId": "On",
+                            "Command": "w 14 1"
+                          },
+                          {
+                            "Id": 1,
+                            "TaskId": "Off",
+                            "Command": "w 14 0"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
                 """);
         }
     }
@@ -65,6 +96,14 @@ namespace DayTimeService.Daily
         public required string TaskId { get; set; }
         public double Offset { get; set; }
         public required string Command { get; set; }
+        public List<Instruction>? Instructions { get; set; }
+    }
+
+    public class Instruction
+    {
+        public int? Id { get; set; }
+        public string? TaskId { get; set; }
+        public string? Command { get; set; }
     }
 
     public class Test

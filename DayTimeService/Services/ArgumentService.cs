@@ -17,6 +17,7 @@ namespace DayTimeService.Services
             catch (Exception)
             {
                 _arguments.Errors = args.Errors;
+                _arguments.Error = _arguments.Errors.Any();
             }
 
             return _arguments;
@@ -31,5 +32,6 @@ namespace DayTimeService.Services
         public string? WorkloadFile { get; set; }
 
         public IEnumerable<Error>? Errors { get; set; }
+        public bool Error { get; set; }
     }
 }
