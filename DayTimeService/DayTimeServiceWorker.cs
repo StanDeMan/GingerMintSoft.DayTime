@@ -53,9 +53,18 @@ namespace DayTimeService
             {
                 execute = await DayTimeScheduler(stoppingToken);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                logger.LogError("Error at DayTimeServiceWorker.ExecuteAsync: {string}", e);
+                // show all collected errors
+                logger.LogError("DayTimeServiceWorker.ExecuteAsync error: {string}", ex);
+
+                if (Arguments.Read().Errors!.Any())
+                {
+                    foreach (var error in Arguments.Read().Errors!)
+                    {
+                        logger.LogError("DayTimeServiceWorker.ExecuteAsync arguments error(s): {string}", error);
+                    }
+                }
             }
 
             var (ledOn, ledOff) = ReadLedInstructions(execute!);
