@@ -25,8 +25,11 @@ namespace DayTimeService.Services
 
     public class Arguments
     {
-        public string WorkloadFileDefaultName { get; private set; } = new StringBuilder().Append("DailyWorkload.json").ToString();
+        public string WorkloadFileDefaultName { get; private set; } = 
+            new StringBuilder().Append("DailyWorkload.json").ToString();
+
         public string? WorkloadFile { get; set; }
+
         public IEnumerable<Error>? Errors { get; set; }
     }
 }
