@@ -75,7 +75,7 @@ namespace DayTimeService
                 Command.Execute(((_ledOn ? ledOn : ledOff)!));
                 _ledOn = !_ledOn;
 
-                await Task.Delay(Arguments.Read().Errors!.Any() 
+                await Task.Delay(Arguments.Errors!.Any() 
                     ? blinkError 
                     : blinkNormal, 
                     stoppingToken);

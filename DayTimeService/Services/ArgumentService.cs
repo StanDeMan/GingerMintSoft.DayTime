@@ -22,16 +22,26 @@ namespace DayTimeService.Services
 
             return _arguments;
         }
+
+        public IEnumerable<Error>? Errors
+        {
+            get => _arguments.Errors;
+            set => _arguments.Errors = value;
+        }
+
     }
 
     public class Arguments
     {
+        private static readonly List<Error> Errs = new List<Error>();
+
         public string DefaultWorkloadFile { get; private set; } = 
             new StringBuilder().Append("DailyWorkload.json").ToString();
 
         public string? WorkloadFile { get; set; }
 
-        public IEnumerable<Error>? Errors { get; set; } = new List<Error>();
+        public IEnumerable<Error>? Errors { get; set; } = Errs;
+
         public bool Error { get; set; }
     }
 }
