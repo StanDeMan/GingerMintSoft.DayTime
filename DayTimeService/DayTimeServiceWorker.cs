@@ -87,11 +87,14 @@ namespace DayTimeService
         /// <returns>ledOn and ledOff instructions</returns>
         private static (string?, string?, int, int) ReadLedInstructions(Workload execute)
         {
+            const int errorBlink = 100;     // error case: default is 100ms on (5 times on in a sec.)
+            const int normalBlink = 250;    // normal case: default is 250ms on (2 times on in a sec.)
+
             var instructions = execute.Program!.Tasks[(int)EnmInstruction.Blink].Instructions;
             var ledOn = instructions!.Find(on => on.Id == (int)EnmInstruction.On)!.Command;
             var ledOff = instructions.Find(on => on.Id == (int)EnmInstruction.Off)!.Command;
-            var blinkError = execute.Program.Tasks[(int)EnmInstruction.Blink].Error ?? 100;       // error case: default is 100ms on (5 times on in a sec.)
-            var blinkNormal = execute.Program.Tasks[(int)EnmInstruction.Blink].Normal ?? 250;     // normal case: default is 250ms on (2 times on in a sec.)
+            var blinkError = execute.Program.Tasks[(int)EnmInstruction.Blink].Error ?? errorBlink;       
+            var blinkNormal = execute.Program.Tasks[(int)EnmInstruction.Blink].Normal ?? normalBlink;     
 
             return (ledOn, ledOff, blinkNormal, blinkError);
         }
