@@ -12,7 +12,7 @@ using Task = System.Threading.Tasks.Task;
 namespace DayTimeService
 {
     public class DayTimeServiceWorker(
-        ILogger<DayTimeServiceWorker> logger,
+        ILogger logger,
         ArgumentService arguments) : BackgroundService
     {
         private bool _ledOn;
