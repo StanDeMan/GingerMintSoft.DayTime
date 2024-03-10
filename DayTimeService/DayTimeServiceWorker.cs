@@ -15,6 +15,7 @@ namespace DayTimeService
         ILogger<DayTimeServiceWorker> logger,
         ArgumentService arguments) : BackgroundService
     {
+        private bool _ledOn;
         public ArgumentService Arguments { get; } = arguments;
 
         public enum EnmDay
@@ -34,8 +35,6 @@ namespace DayTimeService
             Blink = 2
         }
 
-        private bool _ledOn;
-
         /// <summary>
         /// Long term service:
         /// Switch pv accumulator storage by sun rise and sun set 
@@ -45,7 +44,6 @@ namespace DayTimeService
         /// <returns>Exit code</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var error = false;
             const int blinkError = 100;
             const int blinkNormal = 250;
 
@@ -55,10 +53,18 @@ namespace DayTimeService
             {
                 execute = await DayTimeScheduler(stoppingToken);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                error = true;
-                logger.LogError("Error at DayTimeServiceWorker.ExecuteAsync: {string}", e);
+                // show all collected errors
+                logger.LogError("DayTimeServiceWorker.ExecuteAsync error: {string}", ex);
+
+                if (Arguments.Read().Errors!.Any())
+                {
+                    foreach (var error in Arguments.Read().Errors!)
+                    {
+                        logger.LogError("DayTimeServiceWorker.ExecuteAsync arguments error(s): {string}", error);
+                    }
+                }
             }
 
             var (ledOn, ledOff) = ReadLedInstructions(execute!);
@@ -69,7 +75,7 @@ namespace DayTimeService
                 Command.Execute(((_ledOn ? ledOn : ledOff)!));
                 _ledOn = !_ledOn;
 
-                await Task.Delay(error 
+                await Task.Delay(Arguments.Read().Errors!.Any() 
                     ? blinkError 
                     : blinkNormal, 
                     stoppingToken);
@@ -102,21 +108,11 @@ namespace DayTimeService
                 "DayTimeServiceWorker started at: {time}",
                 DateTimeOffset.Now.ToLocalTime());
 
-            Workload? execute = null;
-
-            try
-            {
-                var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().WorkloadFileDefault;
-                var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows
-                    ? $@"{currentPath}\{workloadFile}"
-                    : $"{currentPath}/{workloadFile}");
-            }
-            catch (Exception e)
-            {
-                logger.LogInformation(
-                    "DayTimeServiceWorker workload file error: {string}", e);
-            }
+            var workloadFile = Arguments.Read().WorkloadFile ?? Arguments.Read().DefaultWorkloadFile;
+            var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var execute = new Application().ReadWorkload(Platform.OperatingSystem == Platform.EnmOperatingSystem.Windows 
+                ? $@"{currentPath}\{workloadFile}"
+                : $"{currentPath}/{workloadFile}");
 
             // if the workload file cannot be found we take the defaults
             execute ??= new Application().ReadDefaultWorkload();
