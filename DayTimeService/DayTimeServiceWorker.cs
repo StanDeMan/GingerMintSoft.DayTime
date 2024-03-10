@@ -44,13 +44,11 @@ namespace DayTimeService
         /// <returns>Exit code</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            const int blinkError = 100;
-            const int blinkNormal = 250;
-
             Workload? execute = null;
 
             try
             {
+                // read executing instructions
                 execute = await DayTimeScheduler(stoppingToken);
             }
             catch (Exception ex)
@@ -67,16 +65,16 @@ namespace DayTimeService
                 }
             }
 
-            var (ledOn, ledOff) = ReadLedInstructions(execute!);
+            var (ledOn, ledOff, blinkNormal, blinkError) = ReadLedInstructions(execute!);
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 // do some blinking here
                 Command.Execute(((_ledOn ? ledOn : ledOff)!));
                 _ledOn = !_ledOn;
-
+                
                 await Task.Delay(Arguments.Errors!.Any() 
-                    ? blinkError 
+                    ? blinkError
                     : blinkNormal, 
                     stoppingToken);
             }
@@ -87,13 +85,15 @@ namespace DayTimeService
         /// </summary>
         /// <param name="execute">Workload with instruction</param>
         /// <returns>ledOn and ledOff instructions</returns>
-        private static (string?, string?) ReadLedInstructions(Workload execute)
+        private static (string?, string?, int, int) ReadLedInstructions(Workload execute)
         {
             var instructions = execute.Program!.Tasks[(int)EnmInstruction.Blink].Instructions;
             var ledOn = instructions!.Find(on => on.Id == (int)EnmInstruction.On)!.Command;
             var ledOff = instructions.Find(on => on.Id == (int)EnmInstruction.Off)!.Command;
+            var blinkError = execute.Program.Tasks[(int)EnmInstruction.Blink].Error ?? 100;       // error case: default is 100ms on (5 times on in a sec.)
+            var blinkNormal = execute.Program.Tasks[(int)EnmInstruction.Blink].Normal ?? 250;     // normal case: default is 250ms on (2 times on in a sec.)
 
-            return (ledOn, ledOff);
+            return (ledOn, ledOff, blinkNormal, blinkError);
         }
 
         /// <summary>

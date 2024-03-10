@@ -55,6 +55,8 @@ namespace DayTimeService.Daily
                       {
                         "Id": 2,
                         "TaskId": "Blink",
+                        "Error": 100,
+                        "Normal": 250,
                         "Instructions": [
                           {
                             "Id": 0,
@@ -99,6 +101,8 @@ namespace DayTimeService.Daily
     {
         public required int Id { get; set; }
         public required string TaskId { get; set; }
+        public int? Error { get; set; }
+        public int? Normal { get; set; }
         public double Offset { get; set; }
         public required string Command { get; set; }
         public List<Instruction>? Instructions { get; set; }

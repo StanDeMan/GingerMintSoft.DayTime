@@ -28,6 +28,8 @@
       {
         "Id": 2,
         "TaskId": "Blink",
+        "Error": 100,
+        "Normal": 250,
         "Instructions": [
           {
             "Id": 0,
