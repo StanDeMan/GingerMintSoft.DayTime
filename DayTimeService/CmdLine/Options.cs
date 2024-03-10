@@ -9,9 +9,10 @@ namespace DayTimeService.CmdLine
         public string? Filename { get; set; }
 
         [Usage(ApplicationAlias = "DayTime")]
-        public static IEnumerable<Example> Examples => 
-        [
-            new Example("Load workload from json file", new Options { Filename = "DailyWorkload.json" })
-        ];
+        public static IEnumerable<Example> Examples =>
+            new List<Example>() 
+            {
+                new Example("Load workload from json file", new Options { Filename = "DailyWorkload.json" })
+            };
     }
 }
