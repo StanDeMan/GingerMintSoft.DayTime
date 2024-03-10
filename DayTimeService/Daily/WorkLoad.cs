@@ -20,6 +20,11 @@ namespace DayTimeService.Daily
 
         /// <summary>
         /// Read the workload default settings
+        /// Recurrence: every day
+        /// Latitude and Longitude: my home
+        /// Sunrise: with offset of 60 minutes after sunrise
+        /// Sunset: with offset of 60 minutes (-60) prior to sunset
+        /// Blink: blink led on/off
         /// </summary>
         /// <returns>Default settings</returns>
         public Workload? ReadDefaultWorkload()
