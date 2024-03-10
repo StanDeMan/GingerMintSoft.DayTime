@@ -1,6 +1,6 @@
 ﻿namespace GingerMintSoft.DayTimeService.WebApp.Models
 {
-    public class Instruction
+    public class Execute
     {
         public string? Command { get; set; }
     }

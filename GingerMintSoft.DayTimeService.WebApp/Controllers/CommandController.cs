@@ -13,11 +13,11 @@ namespace GingerMintSoft.DayTimeService.WebApp.Controllers
 
         [HttpPost]
         [Route("Send")]
-        public async Task<ActionResult> Post([FromBody] Instruction instruction)
+        public async Task<ActionResult> Post([FromBody] Execute execute)
         {
             try
             {
-                var status = Command.Execute(instruction.Command!);
+                var status = Command.Execute(execute.Command!);
                 await Task.Delay(0);
 
                 return new CreatedResult($"/Command/Send", status);
