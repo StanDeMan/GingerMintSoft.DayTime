@@ -1,0 +1,8 @@
+@GingerMintSoft.DayTimeService.WebApp_HostAddress = http://localhost:5001
+
+POST {{GingerMintSoft.DayTimeService.WebApp_HostAddress}}/command/send
+Content-Type: application/json
+
+{
+  "Command": "w 23 0"
+}

@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GingerMintSoft.DayTimeTest"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DayTimeService", "..\DayTimeService\DayTimeService.csproj", "{DE758E66-DEA3-494B-9AE7-EAEDDAFB7B16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DayTimeService.Test", "..\DayTimeService.Test\DayTimeService.Test.csproj", "{CE62B34E-ACF0-40DC-9143-0E98F280D99C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DayTimeService.Test", "..\DayTimeService.Test\DayTimeService.Test.csproj", "{CE62B34E-ACF0-40DC-9143-0E98F280D99C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GingerMintSoft.DayTimeService.WebApp", "..\GingerMintSoft.DayTimeService.WebApp\GingerMintSoft.DayTimeService.WebApp.csproj", "{A2FFA4AF-C573-4D7A-A640-2AEE15909B63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{CE62B34E-ACF0-40DC-9143-0E98F280D99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE62B34E-ACF0-40DC-9143-0E98F280D99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE62B34E-ACF0-40DC-9143-0E98F280D99C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2FFA4AF-C573-4D7A-A640-2AEE15909B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2FFA4AF-C573-4D7A-A640-2AEE15909B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2FFA4AF-C573-4D7A-A640-2AEE15909B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2FFA4AF-C573-4D7A-A640-2AEE15909B63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
