@@ -118,6 +118,7 @@ namespace DayTimeService
                     "DayTimeServiceWorker workload file error: {string}", e);
             }
 
+            // if the workload file cannot be found we take the defaults
             execute ??= new Application().ReadDefaultWorkload();
 
             // start calculate sun rise/set every midnight after 5 seconds
