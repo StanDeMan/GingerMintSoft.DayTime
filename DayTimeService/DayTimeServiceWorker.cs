@@ -58,7 +58,7 @@ namespace DayTimeService
                 // show all collected errors
                 logger.LogError("DayTimeServiceWorker.ExecuteAsync error: {string}", ex);
 
-                if (Arguments.Read().Errors!.Any())
+                if (Arguments.Errors!.Any())
                 {
                     foreach (var error in Arguments.Read().Errors!)
                     {
