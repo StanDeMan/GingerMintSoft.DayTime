@@ -1,6 +1,6 @@
-﻿using GingerMintSoft.DayTime;
+﻿using Quartz;
 using Newtonsoft.Json;
-using Quartz;
+using GingerMintSoft.DayTime;
 using JobTask = System.Threading.Tasks.Task;
 
 namespace DayTimeService.Daily.Jobs
@@ -31,7 +31,9 @@ namespace DayTimeService.Daily.Jobs
 
             var job = JobBuilder.Create<SunRiseSunSetJob>().Build();
 
-            var triggers = execute.Program.Tasks.OrderBy(tsk => tsk.Id)
+            var triggers = execute.Program.Tasks
+                .Where(task => task.Id < Convert.ToInt32(DayTimeServiceWorker.EnmInstruction.Blink))
+                .OrderBy(tsk => tsk.Id)
                 .Select(tasksToExec => (ISimpleTrigger)TriggerBuilder.Create()
                     .StartAt(tasksToExec.Id == Convert.ToInt32(DayTimeServiceWorker.EnmDay.SunRise)
                         ? day.SunRise
