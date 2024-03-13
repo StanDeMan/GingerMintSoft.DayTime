@@ -1,7 +1,5 @@
-﻿using DayTimeService.Execute;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using GingerMintSoft.DayTimeService.WebApp.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace GingerMintSoft.DayTimeService.WebApp.Controllers
 {
@@ -17,8 +15,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Controllers
         {
             try
             {
-                var status = Command.Execute(execute.Command!);
-                await Task.Delay(0);
+                var status = await Command.Bash.ExecuteAsync(execute.Command!);
 
                 return new CreatedResult($"/Command/Send", status);
             }
