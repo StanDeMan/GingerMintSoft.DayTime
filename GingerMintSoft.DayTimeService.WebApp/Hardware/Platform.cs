@@ -11,10 +11,10 @@ namespace GingerMintSoft.DayTimeService.WebApp.Hardware
             Linux
         }
 
-        private const string GpioFile = "/dev/bin/bash";
-
+        private const string ProgramFile = "/bin/bash";
+        private const string ProgramFileWindows = @"\dev\bash";
         public static EnmOperatingSystem OperatingSystem { get; set; }
-        public static string? DevicePath { get; private set; }
+        public static string? ProgramPath { get; private set; }
         public static string? Dns { get; set; }
 
         static Platform()
@@ -35,7 +35,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Hardware
         {
             var currentPath = Path.GetFullPath(@"..\..\");  
             path = path?.TrimStart('/').Replace('/', '\\');
-            DevicePath = Path.Combine(currentPath, path ?? "");
+            ProgramPath = Path.Combine(currentPath, path ?? "");
         }
 
         private static EnmOperatingSystem RunOnOperatingSystem(EnmOperatingSystem os)
@@ -47,15 +47,15 @@ namespace GingerMintSoft.DayTimeService.WebApp.Hardware
 
         private static EnmOperatingSystem RunOnWindows()
         {
-            DevicePath = Directory.GetCurrentDirectory() + GpioFile;
-            SetPath(DevicePath);
+            ProgramPath = Directory.GetCurrentDirectory() + ProgramFileWindows;
+            SetPath(ProgramPath);
 
             return EnmOperatingSystem.Windows;
         }
 
         private static EnmOperatingSystem RunOnLinux()
         {
-            DevicePath = GpioFile;
+            ProgramPath = ProgramFile;
             Dns = $"{SysNet.Dns.GetHostName()}.local";
 
             return EnmOperatingSystem.Linux;
