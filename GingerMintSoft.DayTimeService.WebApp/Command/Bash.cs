@@ -5,6 +5,10 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
 {
     public sealed class Bash
     {
+        private static readonly ILogger<Bash> Logger = LoggerFactory
+            .Create(logging => logging.AddConsole())
+            .CreateLogger<Bash>();
+
         public static string Execute(string command)
         {
             var proc = Process(command);
@@ -50,6 +54,9 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
 
             proc.Start();
             proc.WaitForExit();
+
+            // log executed command
+            Logger.LogInformation($"Executed: {proc.StartInfo.FileName} {proc.StartInfo.Arguments}");
 
             return proc;
         }
