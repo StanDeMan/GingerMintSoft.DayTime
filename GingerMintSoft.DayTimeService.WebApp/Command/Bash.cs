@@ -53,7 +53,6 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             };
 
             proc.Start();
-            proc.WaitForExit();
 
             // log executed command
             Logger.LogInformation($"Executed: {proc.StartInfo.FileName} {proc.StartInfo.Arguments}");
