@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GingerMintSoft.DayTimeService.WebApp.Hardware;
 
 namespace GingerMintSoft.DayTimeService.WebApp.Command
 {
@@ -28,17 +29,27 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
 
             var proc = new Process
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = "-c \"" + command + "\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
+                StartInfo = Platform.OperatingSystem == Platform.EnmOperatingSystem.Linux
+                    ? new ProcessStartInfo
+                    {
+                        FileName = Platform.ProgramPath,
+                        Arguments = "-c \"" + command + "\"",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                    : new ProcessStartInfo
+                    {
+                        FileName = "cmd.exe",
+                        Arguments = $"""/c echo "{command}">> {Platform.ProgramPath}""",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true,
+                    }
             };
 
             proc.Start();
+            proc.WaitForExit();
 
             return proc;
         }

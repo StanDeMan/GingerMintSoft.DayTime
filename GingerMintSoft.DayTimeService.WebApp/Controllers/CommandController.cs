@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using GingerMintSoft.DayTimeService.WebApp.Models;
+﻿using GingerMintSoft.DayTimeService.WebApp.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GingerMintSoft.DayTimeService.WebApp.Controllers
 {
