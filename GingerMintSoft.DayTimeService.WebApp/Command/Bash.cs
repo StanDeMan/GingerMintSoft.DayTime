@@ -9,6 +9,11 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             .Create(logging => logging.AddConsole())
             .CreateLogger<Bash>();
 
+        /// <summary>
+        /// Execute command via process
+        /// </summary>
+        /// <param name="command">Execute this command</param>
+        /// <returns>Return from standard output</returns>
         public static string Execute(string command)
         {
             var proc = Process(command);
@@ -18,6 +23,12 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             return proc.StandardOutput.ReadToEnd();
         }
 
+        /// <summary>
+        /// Execute command via process
+        /// </summary>
+        /// <param name="command">Execute this command</param>
+        /// <param name="secsTimeout">Execute in this time range</param>
+        /// <returns>Return from standard output</returns>
         public static async Task<string> ExecuteAsync(string command, double secsTimeout = 2)
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(secsTimeout));
@@ -27,6 +38,11 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             return await proc.StandardOutput.ReadToEndAsync(cts.Token);
         }
 
+        /// <summary>
+        /// Process the command
+        /// </summary>
+        /// <param name="command">This command</param>
+        /// <returns>Command process</returns>
         private static Process Process(string command)
         {
             command = command.Replace("\"", "\"\"");
@@ -46,6 +62,14 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             return proc;
         }
 
+        /// <summary>
+        /// Start the shell process
+        /// Linux: execute with bash
+        /// Windows: execute cmd.exe
+        /// </summary>
+        /// <param name="fileName">Which shell to use</param>
+        /// <param name="arguments">shell commands</param>
+        /// <returns>Start info for process</returns>
         private static ProcessStartInfo StartProcess(string? fileName, string arguments)
         {
             return new ProcessStartInfo
