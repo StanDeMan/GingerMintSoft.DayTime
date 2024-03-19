@@ -34,22 +34,8 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             var proc = new Process
             {
                 StartInfo = Platform.OperatingSystem == Platform.EnmOperatingSystem.Linux
-                    ? new ProcessStartInfo
-                    {
-                        FileName = Platform.ProgramPath,
-                        Arguments = "-c \"" + command + "\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true
-                    }
-                    : new ProcessStartInfo
-                    {
-                        FileName = "cmd.exe",
-                        Arguments = $"""/c echo "{command}">> {Platform.ProgramPath}""",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true,
-                    }
+                    ? StartProcess(Platform.ProgramPath, "-c \"" + command + "\"")
+                    : StartProcess("cmd.exe", $"""/c echo "{command}">> {Platform.ProgramPath}""")
             };
 
             proc.Start();
@@ -58,6 +44,18 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             Logger.LogInformation($"Executed: {proc.StartInfo.FileName} {proc.StartInfo.Arguments}");
 
             return proc;
+        }
+
+        private static ProcessStartInfo StartProcess(string? fileName, string arguments)
+        {
+            return new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
         }
     }
 }
