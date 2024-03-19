@@ -18,7 +18,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             return proc.StandardOutput.ReadToEnd();
         }
 
-        public static async Task<string> ExecuteAsync(string command, double secsTimeout = 10)
+        public static async Task<string> ExecuteAsync(string command, double secsTimeout = 2)
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(secsTimeout));
             var proc = Process(command);
