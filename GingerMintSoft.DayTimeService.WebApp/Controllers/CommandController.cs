@@ -22,8 +22,8 @@ namespace GingerMintSoft.DayTimeService.WebApp.Controllers
             catch (Exception e)
             {
                 var error = $"Cannot send command: {e}";
-
                 _logger.LogError(error);
+
                 return Conflict(error);
             }
         }
