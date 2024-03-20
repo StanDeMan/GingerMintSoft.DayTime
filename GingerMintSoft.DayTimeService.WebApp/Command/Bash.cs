@@ -17,7 +17,6 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
         public static string Execute(string command)
         {
             var proc = Process(command);
-            proc.Start();
             proc.WaitForExit();
 
             return proc.StandardOutput.ReadToEnd();
