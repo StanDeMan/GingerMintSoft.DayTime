@@ -50,8 +50,8 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             var proc = new Process
             {
                 StartInfo = Platform.OperatingSystem == Platform.EnmOperatingSystem.Linux
-                    ? StartProcess(Platform.ProgramPath, "-c \"" + command + "\"")
-                    : StartProcess("cmd.exe", $"""/c echo "{command}">> {Platform.ProgramPath}""")
+                    ? StartInfo(Platform.ProgramPath, "-c \"" + command + "\"")
+                    : StartInfo("cmd.exe", $"""/c echo "{command}">> {Platform.ProgramPath}""")
             };
 
             proc.Start();
@@ -70,7 +70,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
         /// <param name="fileName">Which shell to use</param>
         /// <param name="arguments">shell commands</param>
         /// <returns>Start info for process</returns>
-        private static ProcessStartInfo StartProcess(string? fileName, string arguments)
+        private static ProcessStartInfo StartInfo(string? fileName, string arguments)
         {
             return new ProcessStartInfo
             {
