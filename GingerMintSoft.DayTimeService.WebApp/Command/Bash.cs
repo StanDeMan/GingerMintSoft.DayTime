@@ -16,8 +16,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
         /// <returns>Return from standard output</returns>
         public static string Execute(string command)
         {
-            var proc = Process(command);
-            proc.Start();
+            using var proc = Process(command);
             proc.WaitForExit();
 
             return proc.StandardOutput.ReadToEnd();
@@ -32,7 +31,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
         public static async Task<string> ExecuteAsync(string command, double secsTimeout = 2)
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(secsTimeout));
-            var proc = Process(command);
+            using var proc = Process(command);
             await proc.WaitForExitAsync(cts.Token);
 
             return await proc.StandardOutput.ReadToEndAsync(cts.Token);
