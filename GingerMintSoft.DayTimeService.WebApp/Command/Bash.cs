@@ -62,7 +62,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
         }
 
         /// <summary>
-        /// Start the shell process
+        /// Create the shell process info for starting process
         /// Linux: execute with bash
         /// Windows: execute cmd.exe
         /// </summary>
