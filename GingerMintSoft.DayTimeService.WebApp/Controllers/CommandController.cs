@@ -17,7 +17,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Controllers
             {
                 var status = await Command.Bash.ExecuteAsync(execute.Command!);
 
-                return new CreatedResult($"/Command/Send", status);
+                return new CreatedResult($"/Command/Bash/Send", status);
             }
             catch (Exception e)
             {
