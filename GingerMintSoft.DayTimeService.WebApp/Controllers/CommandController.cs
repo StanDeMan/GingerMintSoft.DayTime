@@ -10,7 +10,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Controllers
         private readonly ILogger<VersionsController> _logger = logger;
 
         [HttpPost]
-        [Route("Send")]
+        [Route("Bash/Send")]
         public async Task<ActionResult> Post([FromBody] Execute execute)
         {
             try
