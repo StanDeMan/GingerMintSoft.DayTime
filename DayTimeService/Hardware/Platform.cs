@@ -2,7 +2,7 @@
 
 namespace DayTimeService.Hardware
 {
-    public static class Platform
+    public class Platform
     {
         public enum EnmOperatingSystem
         {
@@ -11,14 +11,27 @@ namespace DayTimeService.Hardware
             Linux
         }
 
+        public enum EnmOutput
+        {
+            Unknown,
+            Bash,
+            Gpio
+        }
+
+        private const string ProgramFile = "/bin/bash";
         private const string GpioFile = "/dev/pigpio";
+        private const string ProgramFileWindows = @"\dev\bash";
 
         public static EnmOperatingSystem OperatingSystem { get; set; }
+        public static string? ProgramPath { get; private set; }
         public static string? DevicePath { get; private set; }
         public static string? Dns { get; set; }
+        public static EnmOutput Output { get; set; }
 
-        static Platform()
+        public Platform(EnmOutput output = EnmOutput.Gpio)
         {
+            Output = output;
+
             // If not running on pi set environment for windows platform
             OperatingSystem = Environment.OSVersion.Platform != PlatformID.Win32NT 
                 ? RunOnOperatingSystem(EnmOperatingSystem.Linux) 
@@ -36,6 +49,7 @@ namespace DayTimeService.Hardware
             var currentPath = Path.GetFullPath(@"..\..\");  
             path = path?.TrimStart('/').Replace('/', '\\');
             DevicePath = Path.Combine(currentPath, path ?? "");
+            ProgramPath = Path.Combine(currentPath, path ?? "");
         }
 
         private static EnmOperatingSystem RunOnOperatingSystem(EnmOperatingSystem os)
@@ -47,8 +61,11 @@ namespace DayTimeService.Hardware
 
         private static EnmOperatingSystem RunOnWindows()
         {
-            DevicePath = Directory.GetCurrentDirectory() + GpioFile;
-            SetPath(DevicePath);
+            var path = Output == EnmOutput.Gpio
+                ? DevicePath = Directory.GetCurrentDirectory() + GpioFile
+                : ProgramPath = Directory.GetCurrentDirectory() + ProgramFileWindows;
+
+            SetPath(path);
 
             return EnmOperatingSystem.Windows;
         }
@@ -56,6 +73,7 @@ namespace DayTimeService.Hardware
         private static EnmOperatingSystem RunOnLinux()
         {
             DevicePath = GpioFile;
+            ProgramPath = ProgramFile;
             Dns = $"{SysNet.Dns.GetHostName()}.local";
 
             return EnmOperatingSystem.Linux;
