@@ -38,6 +38,13 @@ namespace DayTimeService.Hardware
                 : RunOnOperatingSystem(EnmOperatingSystem.Windows);
         }
 
+        private static EnmOperatingSystem RunOnOperatingSystem(EnmOperatingSystem os)
+        {
+            return os ==  EnmOperatingSystem.Linux 
+                ? RunOnLinux() 
+                : RunOnWindows();
+        }
+
         /// <summary>
         /// Rebuild the path to windows convention:
         /// This is for debugging and simulating purpose 
@@ -50,13 +57,6 @@ namespace DayTimeService.Hardware
             path = path?.TrimStart('/').Replace('/', '\\');
             DevicePath = Path.Combine(currentPath, path ?? "");
             ProgramPath = Path.Combine(currentPath, path ?? "");
-        }
-
-        private static EnmOperatingSystem RunOnOperatingSystem(EnmOperatingSystem os)
-        {
-            return os ==  EnmOperatingSystem.Linux 
-                ? RunOnLinux() 
-                : RunOnWindows();
         }
 
         private static EnmOperatingSystem RunOnWindows()
