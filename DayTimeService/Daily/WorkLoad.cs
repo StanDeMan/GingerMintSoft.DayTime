@@ -33,6 +33,7 @@ namespace DayTimeService.Daily
                 """
                 {
                   "Program": {
+                    "InputSink": "GpioPath",
                     "Recurrence": "1:00:00:00",
                     "TaskId": "DayTimeServiceWorker",
                     "Coordinate": {
@@ -84,6 +85,7 @@ namespace DayTimeService.Daily
 
     public class Program
     {
+        public required string InputSink { get; set; }
         public required string TaskId { get; set; }
         public TimeSpan? Recurrence { get; set; }
         public required Coordinate Coordinate { get; set; }

@@ -1,5 +1,6 @@
 {
   "Program": {
+    "InputSink": "GpioPath",
     "Recurrence": "1:00:00:00",
     "TaskId": "DayTimeServiceWorker",
     "Coordinate": {
