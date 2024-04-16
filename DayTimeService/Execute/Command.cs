@@ -31,9 +31,7 @@ namespace DayTimeService.Execute
         {
             try
             {
-                var cmd = Convert.ToString(command);
-
-                Writer.Write(@$"{cmd}{Environment.NewLine}");
+                Writer.Write(@$"{Convert.ToString(command)}{Environment.NewLine}");
                 Writer.Flush();
             }
             catch (Exception e)
