@@ -2,7 +2,7 @@
 
 namespace DayTimeService.Hardware
 {
-    public class Platform
+    public sealed class Platform
     {
         public enum EnmOperatingSystem
         {
