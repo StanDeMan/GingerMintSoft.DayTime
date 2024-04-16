@@ -11,7 +11,7 @@ namespace DayTimeService.Hardware
             Linux
         }
 
-        public enum EnmOutput
+        public enum EnmOutputSink
         {
             Unknown,
             Bash,
@@ -26,11 +26,11 @@ namespace DayTimeService.Hardware
         public static string? ProgramPath { get; private set; }
         public static string? DevicePath { get; private set; }
         public static string? Dns { get; set; }
-        public static EnmOutput Output { get; set; }
+        public static EnmOutputSink OutputSink { get; set; }
 
         static Platform()
         {
-            Output = EnmOutput.Gpio;
+            OutputSink = EnmOutputSink.Gpio;
 
             // If not running on pi set environment for windows platform
             OperatingSystem = Environment.OSVersion.Platform != PlatformID.Win32NT 
@@ -61,7 +61,7 @@ namespace DayTimeService.Hardware
 
         private static EnmOperatingSystem RunOnWindows()
         {
-            var path = Output == EnmOutput.Gpio
+            var path = OutputSink == EnmOutputSink.Gpio
                 ? DevicePath = Directory.GetCurrentDirectory() + GpioFile
                 : ProgramPath = Directory.GetCurrentDirectory() + ProgramFileWindows;
 
