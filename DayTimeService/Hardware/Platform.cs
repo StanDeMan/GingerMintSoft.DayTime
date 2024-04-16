@@ -15,7 +15,7 @@ namespace DayTimeService.Hardware
         {
             Unknown,
             Bash,
-            Gpio
+            GpioPath
         }
 
         private const string ProgramFile = "/bin/bash";
@@ -30,7 +30,7 @@ namespace DayTimeService.Hardware
 
         static Platform()
         {
-            OutputSink = EnmOutputSink.Gpio;
+            OutputSink = EnmOutputSink.GpioPath;
 
             // If not running on pi set environment for windows platform
             OperatingSystem = Environment.OSVersion.Platform != PlatformID.Win32NT 
@@ -61,7 +61,7 @@ namespace DayTimeService.Hardware
 
         private static EnmOperatingSystem RunOnWindows()
         {
-            var path = OutputSink == EnmOutputSink.Gpio
+            var path = OutputSink == EnmOutputSink.GpioPath
                 ? DevicePath = Directory.GetCurrentDirectory() + GpioFile
                 : ProgramPath = Directory.GetCurrentDirectory() + ProgramFileWindows;
 
