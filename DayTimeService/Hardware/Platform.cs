@@ -28,9 +28,9 @@ namespace DayTimeService.Hardware
         public static string? Dns { get; set; }
         public static EnmOutput Output { get; set; }
 
-        public Platform(EnmOutput output = EnmOutput.Gpio)
+        static Platform()
         {
-            Output = output;
+            Output = EnmOutput.Gpio;
 
             // If not running on pi set environment for windows platform
             OperatingSystem = Environment.OSVersion.Platform != PlatformID.Win32NT 
