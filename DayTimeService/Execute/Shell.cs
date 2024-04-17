@@ -43,5 +43,27 @@ namespace DayTimeService.Execute
 
             return true;
         }
+
+        /// <summary>
+        /// Internal execution
+        /// </summary>
+        /// <param name="command">Command to execute</param>
+        /// <returns>True: if went ok</returns>
+        public static async Task<bool> ExecuteAsync(string command)
+        {
+            try
+            {
+                await Writer.WriteAsync(@$"{command}{Environment.NewLine}");
+                await Writer.FlushAsync();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Shell.ExecuteAsync: {e}");
+
+                return false;
+            }
+
+            return true;
+        }
     }
 }
