@@ -10,6 +10,19 @@ namespace GingerMintSoft.DayTimeTest
         public double Latitude { get; set; } = 48.10507778308992;
         public double Longitude { get; set; } = 7.90856839921184;
 
+        // take DST into account
+        public int OffsetDst;
+        public int HourSunRise = 6;
+        public int HourSunSet = 16;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            OffsetDst = TimeZoneInfo.Local.GetUtcOffset(DateTimeOffset.Now).Hours;
+            HourSunRise += OffsetDst;
+            HourSunSet += OffsetDst;
+        }
+
         [TestMethod]
         public void TestSunriseSunSetTime()
         {
@@ -33,8 +46,8 @@ namespace GingerMintSoft.DayTimeTest
             Console.WriteLine("Sunset: " + sunSetOfActDay);
 
             // check sun rise and sun set for day 16.02.2024
-            Assert.AreEqual("07:33:51", sunRiseOfActDay.ToString());
-            Assert.AreEqual("17:51:00", sunSetOfActDay.ToString());
+            Assert.AreEqual($"{HourSunRise:00}:33:51", sunRiseOfActDay.ToString());
+            Assert.AreEqual($"{HourSunSet:00}:51:00", sunSetOfActDay.ToString());
         }
 
         [TestMethod]
@@ -59,8 +72,8 @@ namespace GingerMintSoft.DayTimeTest
             Console.WriteLine("Sunset: " + sunSetOfActDay);
 
             // check sun rise and sun set for day 16.02.2024
-            Assert.AreEqual("07:01:57", sunRiseOfActDay.ToString());
-            Assert.AreEqual("18:22:54", sunSetOfActDay.ToString());
+            Assert.AreEqual($"{HourSunRise:00}:01:57", sunRiseOfActDay.ToString());
+            Assert.AreEqual($"{HourSunSet + 1:00}:22:54", sunSetOfActDay.ToString());
         }
 
         [TestMethod]
@@ -85,8 +98,8 @@ namespace GingerMintSoft.DayTimeTest
             Console.WriteLine("Sunset: " + sunSetOfActDay);
 
             // check sun rise and sun set for day 16.02.2024
-            Assert.AreEqual("06:25:35", sunRiseOfActDay.ToString());
-            Assert.AreEqual("18:59:16", sunSetOfActDay.ToString());
+            Assert.AreEqual($"{HourSunRise - 1:00}:25:35", sunRiseOfActDay.ToString());
+            Assert.AreEqual($"{HourSunSet + 1:00}:59:16", sunSetOfActDay.ToString());
         }
 
         [TestMethod]
@@ -111,8 +124,8 @@ namespace GingerMintSoft.DayTimeTest
             Console.WriteLine("Sunset: " + sunSetOfActDay);
 
             // check sun rise and sun set for day 16.02.2024
-            Assert.AreEqual("05:49:36", sunRiseOfActDay.ToString());
-            Assert.AreEqual("19:35:15", sunSetOfActDay.ToString());
+            Assert.AreEqual($"{HourSunRise - 2:00}:49:36", sunRiseOfActDay.ToString());
+            Assert.AreEqual($"{HourSunSet + 2:00}:35:15", sunSetOfActDay.ToString());
         }
     }
 }
