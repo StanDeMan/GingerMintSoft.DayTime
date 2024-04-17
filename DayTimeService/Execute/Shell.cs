@@ -27,16 +27,16 @@ namespace DayTimeService.Execute
         /// </summary>
         /// <param name="command">Command to execute</param>
         /// <returns>True: if went ok</returns>
-        public static bool Execute(dynamic command)
+        public static bool Execute(string command)
         {
             try
             {
-                Writer.Write(@$"{Convert.ToString(command)}{Environment.NewLine}");
+                Writer.Write(@$"{command}{Environment.NewLine}");
                 Writer.Flush();
             }
             catch (Exception e)
             {
-                Logger.LogError($"Command.Execute (RunInternal): {e}");
+                Logger.LogError($"Shell.Execute: {e}");
 
                 return false;
             }

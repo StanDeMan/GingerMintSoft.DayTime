@@ -14,12 +14,25 @@ namespace DayTimeService.Execute
         /// </summary>
         /// <param name="command">Execute this command</param>
         /// <returns>Return from standard output</returns>
-        public static string Execute(string command)
+        public static (bool, string) Execute(string command)
         {
-            using var proc = Process(command);
-            proc.WaitForExit();
+            var ok = true;
+            var responseOutput = "";
 
-            return proc.StandardOutput.ReadToEnd();
+            using var proc = Process(command);
+
+            try
+            {
+                proc.WaitForExit();
+                responseOutput = proc.StandardOutput.ReadToEnd();
+            }
+            catch (Exception)
+            {
+                ok = false;
+            }
+
+
+            return (ok, responseOutput);
         }
 
         /// <summary>
@@ -28,13 +41,25 @@ namespace DayTimeService.Execute
         /// <param name="command">Execute this command</param>
         /// <param name="secsTimeout">Execute in this time range</param>
         /// <returns>Return from standard output</returns>
-        public static async Task<string> ExecuteAsync(string command, double secsTimeout = 2)
+        public static async Task<(bool, string)> ExecuteAsync(string command, double secsTimeout = 2)
         {
+            var ok = true;
+            var responseOutput = "";
+
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(secsTimeout));
             using var proc = Process(command);
-            await proc.WaitForExitAsync(cts.Token);
 
-            return await proc.StandardOutput.ReadToEndAsync(cts.Token);
+            try
+            {
+                await proc.WaitForExitAsync(cts.Token);
+                responseOutput = await proc.StandardOutput.ReadToEndAsync(cts.Token);
+            }
+            catch (Exception)
+            {
+                ok = false;
+            }
+
+            return (ok, responseOutput);
         }
 
         /// <summary>

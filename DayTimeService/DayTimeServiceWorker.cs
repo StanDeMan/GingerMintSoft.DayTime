@@ -70,7 +70,7 @@ namespace DayTimeService
             while (!stoppingToken.IsCancellationRequested)
             {
                 // do some blinking here
-                Shell.Execute(((_ledOn ? ledOn : ledOff)!));
+                Command.Execute(((_ledOn ? ledOn : ledOff)!));
                 _ledOn = !_ledOn;
                 
                 await Task.Delay(Arguments.Errors!.Any() 
@@ -123,6 +123,12 @@ namespace DayTimeService
             // start calculate sun rise/set every midnight after 5 seconds
             var startingTime = DateTime.Today.AddDays(1).AddSeconds(5);
             var recurrence = execute!.Program!.Recurrence ?? TimeSpan.FromDays(1);
+
+            // which shell to use: bash or command line
+            Platform.InputSink = execute.Program.InputSink == Enum.GetName(typeof(Platform.EnmInputSink),
+                Platform.EnmInputSink.Bash) 
+                ? Platform.EnmInputSink.Bash 
+                : Platform.EnmInputSink.GpioPath;
 
             logger.LogInformation(
                 "DayTimeServiceWorker will be executed at: {time} with recurrence of {double:F} hours",

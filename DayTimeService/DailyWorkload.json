@@ -6,7 +6,7 @@
       "First": "0:00:00:10",
       "Second": "0:00:00:30"
     },
-    "InputSink": "GpioPath",
+    "InputSink": "Bash",
     "Recurrence": "1:00:00:00",
     "TaskId": "DayTimeServiceWorker",
     "Coordinate": {

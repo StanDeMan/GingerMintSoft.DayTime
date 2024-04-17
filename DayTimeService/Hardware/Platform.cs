@@ -26,16 +26,25 @@ namespace DayTimeService.Hardware
         public static string? ProgramPath { get; private set; }
         public static string? DevicePath { get; private set; }
         public static string? Dns { get; set; }
-        public static EnmInputSink InputSink { get; set; }
+
+        private static EnmInputSink _inputSink;
+        
+        public static EnmInputSink InputSink
+        {
+            get => _inputSink;
+            set
+            {
+                _inputSink = value;
+
+                OperatingSystem = Environment.OSVersion.Platform != PlatformID.Win32NT
+                    ? RunOnOperatingSystem(EnmOperatingSystem.Linux)
+                    : RunOnOperatingSystem(EnmOperatingSystem.Windows);
+            }
+        }
 
         static Platform()
         {
             InputSink = EnmInputSink.GpioPath;
-
-            // If not running on pi set environment for windows platform
-            OperatingSystem = Environment.OSVersion.Platform != PlatformID.Win32NT 
-                ? RunOnOperatingSystem(EnmOperatingSystem.Linux) 
-                : RunOnOperatingSystem(EnmOperatingSystem.Windows);
         }
 
         private static EnmOperatingSystem RunOnOperatingSystem(EnmOperatingSystem os)
