@@ -16,7 +16,7 @@ namespace DayTimeService.Daily.Jobs
             var taskId = dataMap.GetString("TaskId");
             var command = dataMap.GetString("Command");
 
-            var bOk = Command.Execute(command!);
+            var bOk = Shell.Execute(command!);
 
             LogSunRiseSunSetJob(taskId, command, bOk);
 

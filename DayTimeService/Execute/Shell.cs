@@ -3,19 +3,19 @@ using DayTimeService.Hardware;
 
 namespace DayTimeService.Execute
 {
-    public class Command
+    public class Shell
     {
         private static readonly StreamWriter Writer;
-        private static readonly ILogger<Command> Logger = LoggerFactory
+        private static readonly ILogger<Shell> Logger = LoggerFactory
             .Create(logging => logging.AddConsole())
-            .CreateLogger<Command>();
+            .CreateLogger<Shell>();
 
         /// <summary>
         /// Constructor:
         /// -> On development machine local path is set to: ./dev/pigpio file
         /// -> On linux the path is set to pigpio deamon: /dev/pigpio
         /// </summary>
-        static Command()
+        static Shell()
         {
             var gpio = Platform.DevicePath;
             var fileStream = new FileInfo(gpio!).OpenWrite();
