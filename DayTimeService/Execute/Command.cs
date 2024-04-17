@@ -10,7 +10,7 @@ namespace DayTimeService.Execute
 
         public static bool Execute(string command)
         {
-            var ok = true;
+            bool ok;
 
             try
             {
