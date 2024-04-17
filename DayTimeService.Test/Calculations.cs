@@ -14,6 +14,7 @@ namespace DayTimeService.Test
                 Program = new Daily.Program
                 {
                     TaskId = "TestWorkload",
+                    InputSink = "GpioPath",
                     Coordinate = new Coordinate()
                     {
                         Latitude = 48.11,
@@ -60,6 +61,7 @@ namespace DayTimeService.Test
                 Program = new Daily.Program
                 {
                     TaskId = "TestWorkload",
+                    InputSink = "GpioPath",
                     Coordinate = new Coordinate()
                     {
                         Latitude = 48.11,
@@ -105,6 +107,7 @@ namespace DayTimeService.Test
                 Program = new Daily.Program
                 {
                     TaskId = "TestWorkload",
+                    InputSink = "GpioPath",
                     Coordinate = new Coordinate()
                     {
                         Latitude = 48.11,
@@ -154,6 +157,7 @@ namespace DayTimeService.Test
                 Program = new Daily.Program
                 {
                     TaskId = "TestWorkload",
+                    InputSink = "GpioPath",
                     Coordinate = new Coordinate()
                     {
                         Latitude = 48.11,
