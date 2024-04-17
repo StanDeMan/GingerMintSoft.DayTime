@@ -8,7 +8,7 @@ namespace DayTimeService.Execute
             .Create(logging => logging.AddConsole())
             .CreateLogger<Command>();
 
-        public static bool Execute(dynamic command)
+        public static bool Execute(string command)
         {
             var ok = true;
 
@@ -20,14 +20,14 @@ namespace DayTimeService.Execute
                 }
                 else
                 {
-                    Bash.Execute(command);
+                    (ok, _) = Bash.Execute(command);
                 }
             }
             catch (Exception e)
             {
                 Logger.LogError($"Command.Execute (RunInternal): {e}");
 
-                return false;
+                ok = false;
             }
 
             return ok;
