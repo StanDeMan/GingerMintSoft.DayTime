@@ -44,6 +44,7 @@ namespace DayTimeService.Hardware
 
         static Platform()
         {
+            //Default shell sink
             InputSink = EnmInputSink.GpioPath;
         }
 
