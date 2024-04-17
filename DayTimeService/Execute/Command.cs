@@ -8,6 +8,11 @@ namespace DayTimeService.Execute
             .Create(logging => logging.AddConsole())
             .CreateLogger<Command>();
 
+        /// <summary>
+        /// Execute command
+        /// </summary>
+        /// <param name="command">command to execute</param>
+        /// <returns>Returns if executed well</returns>
         public static bool Execute(string command)
         {
             bool ok;
@@ -33,6 +38,11 @@ namespace DayTimeService.Execute
             return ok;
         }
 
+        /// <summary>
+        /// Execute command async
+        /// </summary>
+        /// <param name="command">command to execute</param>
+        /// <returns>Returns if executed well</returns>
         public static async Task<bool> ExecuteAsync(string command)
         {
             bool ok;
