@@ -10,6 +10,8 @@ namespace DayTimeService.Execute
 
         /// <summary>
         /// Execute command
+        /// Uses bash or gpio folder
+        /// Which shell is used is set at workload input sink
         /// </summary>
         /// <param name="command">command to execute</param>
         /// <returns>Returns if executed well</returns>
@@ -40,6 +42,8 @@ namespace DayTimeService.Execute
 
         /// <summary>
         /// Execute command async
+        /// Uses bash or gpio folder
+        /// Which shell is used is set at workload input sink
         /// </summary>
         /// <param name="command">command to execute</param>
         /// <returns>Returns if executed well</returns>
