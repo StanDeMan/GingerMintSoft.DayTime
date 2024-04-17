@@ -26,8 +26,10 @@ namespace DayTimeService.Execute
                 proc.WaitForExit();
                 responseOutput = proc.StandardOutput.ReadToEnd();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError($"Bash.Execute (RunInternal): {e}");
+
                 ok = false;
             }
 
@@ -54,8 +56,10 @@ namespace DayTimeService.Execute
                 await proc.WaitForExitAsync(cts.Token);
                 responseOutput = await proc.StandardOutput.ReadToEndAsync(cts.Token);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError($"Bash.ExecuteAsync (RunInternal): {e}");
+
                 ok = false;
             }
 
@@ -75,13 +79,10 @@ namespace DayTimeService.Execute
             {
                 StartInfo = Platform.OperatingSystem == Platform.EnmOperatingSystem.Linux
                     ? ProcessStartInfo(Platform.ProgramPath, "-c \"" + command + "\"")
-                    : ProcessStartInfo("cmd.exe", $"""/c echo "{command}">> {Platform.ProgramPath}""")
+                    : ProcessStartInfo("cmd.exe", $"/c echo {command} >> {Platform.ProgramPath}")
             };
 
             proc.Start();
-
-            // log executed command
-            Logger.LogInformation($"Executed: {proc.StartInfo.FileName} {proc.StartInfo.Arguments}");
 
             return proc;
         }
