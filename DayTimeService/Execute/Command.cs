@@ -32,5 +32,30 @@ namespace DayTimeService.Execute
 
             return ok;
         }
+
+        public static async Task<bool> ExecuteAsync(string command)
+        {
+            bool ok;
+
+            try
+            {
+                if (Platform.InputSink == Platform.EnmInputSink.GpioPath)
+                {
+                    ok = await Shell.ExecuteAsync(command);
+                }
+                else
+                {
+                    (ok, _) = await Bash.ExecuteAsync(command);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Command.Execute (RunInternal): {e}");
+
+                ok = false;
+            }
+
+            return ok;
+        }
     }
 }
