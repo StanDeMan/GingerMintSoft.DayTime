@@ -10,7 +10,8 @@ namespace DayTimeService.Execute
             .CreateLogger<Bash>();
 
         /// <summary>
-        /// Execute command via process
+        /// Execute command via process:
+        /// Send via bash
         /// </summary>
         /// <param name="command">Execute this command</param>
         /// <returns>Return from standard output</returns>
@@ -29,7 +30,6 @@ namespace DayTimeService.Execute
             catch (Exception e)
             {
                 Logger.LogError($"Bash.Execute (RunInternal): {e}");
-
                 ok = false;
             }
 
@@ -39,6 +39,7 @@ namespace DayTimeService.Execute
 
         /// <summary>
         /// Execute command via process
+        /// Send via bash
         /// </summary>
         /// <param name="command">Execute this command</param>
         /// <param name="secsTimeout">Execute in this time range</param>
@@ -59,7 +60,6 @@ namespace DayTimeService.Execute
             catch (Exception e)
             {
                 Logger.LogError($"Bash.ExecuteAsync (RunInternal): {e}");
-
                 ok = false;
             }
 
@@ -68,6 +68,9 @@ namespace DayTimeService.Execute
 
         /// <summary>
         /// Process the command
+        /// Handle different on different platforms:
+        /// Windows: execute with cmd.exe
+        /// Linux: execute with bash
         /// </summary>
         /// <param name="command">This command</param>
         /// <returns>Command process</returns>
