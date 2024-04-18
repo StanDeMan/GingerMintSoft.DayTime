@@ -48,6 +48,11 @@ namespace DayTimeService.Hardware
             InputSink = EnmInputSink.GpioPath;
         }
 
+        /// <summary>
+        /// Get running os on executing device
+        /// </summary>
+        /// <param name="os">Operating System</param>
+        /// <returns>Running os on executing device</returns>
         private static EnmOperatingSystem RunOnOperatingSystem(EnmOperatingSystem os)
         {
             return os ==  EnmOperatingSystem.Linux 
@@ -58,7 +63,7 @@ namespace DayTimeService.Hardware
         /// <summary>
         /// Rebuild the path to windows convention:
         /// This is for debugging and simulating purpose 
-        /// of the gpio if run under windows
+        /// of the gpio if running under windows
         /// </summary>
         /// <param name="path">Linux path convention</param>
         private static void SetPath(string? path)
