@@ -32,7 +32,7 @@ namespace DayTimeService.Execute
         {
             try
             {
-                Writer.Write(@$"{command}{Environment.NewLine}");
+                Writer.Write($"{command}{Environment.NewLine}");
                 Writer.Flush();
             }
             catch (Exception e)
@@ -55,7 +55,7 @@ namespace DayTimeService.Execute
         {
             try
             {
-                await Writer.WriteAsync(@$"{command}{Environment.NewLine}");
+                await Writer.WriteAsync($"{command}{Environment.NewLine}");
                 await Writer.FlushAsync();
             }
             catch (Exception e)
