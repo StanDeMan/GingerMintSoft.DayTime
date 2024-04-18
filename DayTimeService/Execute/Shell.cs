@@ -23,9 +23,10 @@ namespace DayTimeService.Execute
         }
 
         /// <summary>
-        /// Internal execution
+        /// Internal execution:
+        /// Send to pigpio deamon via cli
         /// </summary>
-        /// <param name="command">Command to execute</param>
+        /// <param name="command">Command to execute: send via cli</param>
         /// <returns>True: if went ok</returns>
         public static bool Execute(string command)
         {
@@ -45,9 +46,10 @@ namespace DayTimeService.Execute
         }
 
         /// <summary>
-        /// Internal execution
+        /// Internal execution:
+        /// Send to pigpio deamon via cli
         /// </summary>
-        /// <param name="command">Command to execute</param>
+        /// <param name="command">Command to execute: send via cli</param>
         /// <returns>True: if went ok</returns>
         public static async Task<bool> ExecuteAsync(string command)
         {
