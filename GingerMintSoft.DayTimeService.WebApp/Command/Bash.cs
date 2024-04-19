@@ -50,7 +50,7 @@ namespace GingerMintSoft.DayTimeService.WebApp.Command
             {
                 StartInfo = Platform.OperatingSystem == Platform.EnmOperatingSystem.Linux
                     ? ProcessStartInfo(Platform.ProgramPath, "-c \"" + command + "\"")
-                    : ProcessStartInfo("cmd.exe", $"""/c echo "{command}">> {Platform.ProgramPath}""")
+                    : ProcessStartInfo("cmd.exe", $"""/c echo {command} >> {Platform.ProgramPath}""")
             };
 
             proc.Start();
