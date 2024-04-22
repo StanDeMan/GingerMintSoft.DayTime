@@ -44,17 +44,36 @@ namespace DayTimeService
         /// <returns>Exit code</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Workload? execute = null;
-
             try
             {
                 // read executing instructions
-                execute = await DayTimeScheduler(stoppingToken);
+                var execute = await DayTimeScheduler(stoppingToken);
+                var (ledOn, ledOff, blinkNormal, blinkError) = ReadLedInstructions(execute);
+
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    // do some blinking here
+                    await Command.ExecuteAsync(((_ledOn ? ledOn : ledOff)!));
+                    _ledOn = !_ledOn;
+
+                    await Task.Delay(Arguments.Errors!.Any()
+                            ? blinkError
+                            : blinkNormal,
+                        stoppingToken);
+                }
             }
             catch (Exception ex)
             {
-                // show all collected errors
-                logger.LogError("DayTimeServiceWorker.ExecuteAsync error: {string}", ex);
+                switch (stoppingToken.IsCancellationRequested)
+                {
+                    case true:
+                        logger.LogInformation("DayTimeServiceWorker.ExecuteAsync stopping");        // stopping task 
+                        break;
+
+                    default:
+                        logger.LogError("DayTimeServiceWorker.ExecuteAsync error: {string}", ex);   // show all collected errors
+                        break;
+                }
 
                 if (Arguments.Errors!.Any())
                 {
@@ -63,20 +82,6 @@ namespace DayTimeService
                         logger.LogError("DayTimeServiceWorker.ExecuteAsync arguments error(s): {string}", error);
                     }
                 }
-            }
-
-            var (ledOn, ledOff, blinkNormal, blinkError) = ReadLedInstructions(execute!);
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                // do some blinking here
-                await Command.ExecuteAsync(((_ledOn ? ledOn : ledOff)!));
-                _ledOn = !_ledOn;
-                
-                await Task.Delay(Arguments.Errors!.Any() 
-                    ? blinkError
-                    : blinkNormal, 
-                    stoppingToken);
             }
         }
 
