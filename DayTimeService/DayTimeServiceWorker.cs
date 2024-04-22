@@ -70,7 +70,7 @@ namespace DayTimeService
             while (!stoppingToken.IsCancellationRequested)
             {
                 // do some blinking here
-                Command.Execute(((_ledOn ? ledOn : ledOff)!));
+                await Command.ExecuteAsync(((_ledOn ? ledOn : ledOff)!));
                 _ledOn = !_ledOn;
                 
                 await Task.Delay(Arguments.Errors!.Any() 
