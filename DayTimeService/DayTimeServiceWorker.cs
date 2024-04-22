@@ -54,7 +54,7 @@ namespace DayTimeService
                 {
                     // do some blinking here
                     await Command.ExecuteAsync(((_ledOn ? ledOn : ledOff)!));
-                    _ledOn = !_ledOn;
+                    _ledOn = !_ledOn;   // toggle blink status
 
                     await Task.Delay(Arguments.Errors!.Any()
                             ? blinkError
