@@ -48,7 +48,7 @@ namespace DayTimeService
             {
                 // read executing instructions
                 var execute = await DayTimeScheduler(stoppingToken);
-                var (ledOn, ledOff, blinkNormal, blinkError) = ReadLedInstructions(execute);
+                var (ledOn, ledOff, blinkNormal, blinkError) = ReadBlinkInstructions(execute);
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
@@ -90,7 +90,7 @@ namespace DayTimeService
         /// </summary>
         /// <param name="execute">Workload with instruction</param>
         /// <returns>ledOn and ledOff instructions</returns>
-        private static (string?, string?, int, int) ReadLedInstructions(Workload execute)
+        private static (string?, string?, int, int) ReadBlinkInstructions(Workload execute)
         {
             const int errorBlink = 100;     // error case: default is 100ms on (5 times on in a sec.)
             const int normalBlink = 250;    // normal case: default is 250ms on (2 times on in a sec.)
