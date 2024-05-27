@@ -70,13 +70,14 @@ namespace DayTimeService
                         logger.LogInformation("DayTimeServiceWorker.ExecuteAsync stopping");        // stopping task 
                         break;
 
-                    default:
-                        logger.LogError("DayTimeServiceWorker.ExecuteAsync error: {string}", ex);   // show all collected errors
+                    default:                                                                        // execution error
+                        logger.LogError("DayTimeServiceWorker.ExecuteAsync error: {string}", ex);   
                         break;
                 }
 
                 if (Arguments.Errors!.Any())
                 {
+                    // show all collected argument errors
                     foreach (var error in Arguments.Read().Errors!)
                     {
                         logger.LogError("DayTimeServiceWorker.ExecuteAsync arguments error(s): {string}", error);
