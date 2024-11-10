@@ -15,13 +15,13 @@ namespace DayTimeService.Test
                 {
                     TaskId = "TestWorkload",
                     InputSink = "GpioPath",
-                    Coordinate = new Coordinate()
+                    Coordinate = new Coordinate
                     {
                         Latitude = 48.11,
                         Longitude = 7.91
-                    },
-                    Tasks =
-                    [
+                    }, 
+                    Tasks = new List<DayTask> 
+                        {
                         new()
                         {
                             Id = 0,
@@ -29,7 +29,7 @@ namespace DayTimeService.Test
                             Offset = 121,
                             Command = "Command 1"
                         },
-
+                
                         new()
                         {
                             Id = 1,
@@ -37,7 +37,7 @@ namespace DayTimeService.Test
                             Offset = -121,
                             Command = "Command 1"
                         }
-                    ]
+                    }
                 }
             };
 
