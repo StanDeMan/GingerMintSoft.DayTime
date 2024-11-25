@@ -19,6 +19,24 @@
         "TaskId": "SunSet",
         "Offset": -60,
         "Command": "w 23 1"
+      },
+      {
+        "Id": 2,
+        "TaskId": "Blink",
+        "Error": 100,
+        "Normal": 250,
+        "Instructions": [
+          {
+            "Id": 0,
+            "TaskId": "On",
+            "Command": "w 14 1"
+          },
+          {
+            "Id": 1,
+            "TaskId": "Off",
+            "Command": "w 14 0"
+          }
+        ]
       }
     ]
   }
