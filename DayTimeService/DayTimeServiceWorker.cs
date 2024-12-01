@@ -16,7 +16,7 @@ namespace DayTimeService
         ArgumentService arguments) : BackgroundService
     {
         private bool _ledOn;
-        public ArgumentService Arguments { get; } = arguments;
+        private ArgumentService Arguments { get; } = arguments;
 
         public enum EnmDay
         {
